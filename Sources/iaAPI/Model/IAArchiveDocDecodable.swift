@@ -230,7 +230,7 @@ public class IAFileMappable: Decodable {
     
         if let s = size {
             if let rawSize = Int(s) {
-                return StringUtils.sizeString(size: rawSize)
+                return IAStringUtils.sizeString(size: rawSize)
             }
         }
         return nil
@@ -240,7 +240,7 @@ public class IAFileMappable: Decodable {
     public var displayLength: String? {
         
         if let l = length {
-            return StringUtils.timeFormatter(timeString: l)
+            return IAStringUtils.timeFormatter(timeString: l)
         }
         return nil
     }

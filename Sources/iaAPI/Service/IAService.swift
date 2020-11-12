@@ -17,18 +17,18 @@ enum SearchFields : Int {
 }
 
 
-class IAService {
+public class IAService {
 
-    var urlStr : String?
-    var parameters : Dictionary<String, String>!
-    var _queryString : String?
-    var _identifier : String?
-    var _start : Int = 0
-    var searchField : SearchFields
+    public var urlStr : String?
+    public var parameters : Dictionary<String, String>!
+    public var _queryString : String?
+    public var _identifier : String?
+    public var _start : Int = 0
+    public var searchField : SearchFields
 
-    let baseItemUrl = "https://archive.org/metadata/"
+    public let baseItemUrl = "https://archive.org/metadata/"
     
-    var queryString : String? {
+    public var queryString : String? {
         set {
             self._queryString = newValue!
             self.urlStr = "https://archive.org/advancedsearch.php"
@@ -62,14 +62,14 @@ class IAService {
     var request : Request?
     
     
-    typealias SearchResponse = (_ result: [IASearchDocDecodable]?, _ error: Error?) -> Void
+    public typealias SearchResponse = (_ result: [IASearchDocDecodable]?, _ error: Error?) -> Void
 
     init() {
         self.searchField = SearchFields.all
     }
     
     //r
-    func searchFetch(_ completion:@escaping SearchResponse) {
+    public func searchFetch(_ completion:@escaping SearchResponse) {
         self.request?.cancel()
 
         guard let qs = self._queryString, qs.count > 0 else {
@@ -92,9 +92,9 @@ class IAService {
 
     }
     
-    typealias ArchiveDocResponse = (_ result: IAArchiveDocDecodable?, _ error: Error?) -> Void
+    public typealias ArchiveDocResponse = (_ result: IAArchiveDocDecodable?, _ error: Error?) -> Void
 
-    func archiveDoc(identifier:String, completion:@escaping ArchiveDocResponse) {
+    public func archiveDoc(identifier:String, completion:@escaping ArchiveDocResponse) {
         self.request?.cancel()
 //        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let baseItemUrl = "https://archive.org/metadata/"

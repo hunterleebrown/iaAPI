@@ -104,14 +104,14 @@ class IASearchDocDecodable: Decodable {
     
     public var displayArchiveDate: String? {
         if let date = archiveDate {
-            return StringUtils.shortDateFromDateString(date)
+            return IAStringUtils.shortDateFromDateString(date)
         }
         return nil
     }
     
     public var displayContentDate: String? {
         if let date = contentDate {
-            return StringUtils.shortDateFromDateString(date)
+            return IAStringUtils.shortDateFromDateString(date)
         }
         return nil
     }

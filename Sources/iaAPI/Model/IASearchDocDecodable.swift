@@ -38,7 +38,7 @@ public class IASearchResults: Decodable {
 }
 
 
-class IASearchDocDecodable: Decodable {
+public class IASearchDocDecodable: Decodable {
     
     public var identifier: String?
     public var title: String?

@@ -142,9 +142,9 @@ extension NSMutableAttributedString {
     }
     
     class func IABodyMutableAttributedString(_ html:String, font:UIFont)->NSMutableAttributedString? {
-        let italicFontName: String = font.italic?.fontName ?? font.fontName
-        let boldFontName: String = font.bold?.fontName ?? font.fontName
-        let boldItalicFontName: String = font.bold?.italic?.fontName ?? font.fontName
+        let italicFontName: String = font.with(.traitItalic).fontName 
+        let boldFontName: String = font.with(.traitBold).fontName 
+        let boldItalicFontName: String = font.with([.traitItalic, .traitBold]).fontName 
         let pointSize: String = String(describing: font.pointSize)
         
         var htmlCss: String = "<html><head><style type=\"text/css\">"
@@ -221,3 +221,12 @@ extension String {
     }
 }
 
+extension UIFont {
+
+    func with(_ traits: UIFontDescriptor.SymbolicTraits...) -> UIFont {
+        guard let descriptor = self.fontDescriptor.withSymbolicTraits(UIFontDescriptor.SymbolicTraits(traits).union(self.fontDescriptor.symbolicTraits)) else {
+            return self
+        }
+        return UIFont(descriptor: descriptor, size: 0)
+    }
+}

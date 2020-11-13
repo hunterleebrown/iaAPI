@@ -11,7 +11,7 @@ import UIKit
 
 import Alamofire
 
-enum SearchFields : Int {
+public enum IASearchFields : Int {
     case all = 0
     case creator = 1
 }
@@ -24,7 +24,7 @@ public class IAService {
     public var _queryString : String?
     public var _identifier : String?
     public var _start : Int = 0
-    public var searchField : SearchFields
+    public var searchField : IASearchFields
 
     public let baseItemUrl = "https://archive.org/metadata/"
     
@@ -65,7 +65,7 @@ public class IAService {
     public typealias SearchResponse = (_ result: [IASearchDocDecodable]?, _ error: Error?) -> Void
 
     init() {
-        self.searchField = SearchFields.all
+        self.searchField = IASearchFields.all
     }
     
     //r

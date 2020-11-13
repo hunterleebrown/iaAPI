@@ -64,11 +64,10 @@ public class IAService {
     
     public typealias SearchResponse = (_ result: [IASearchDocDecodable]?, _ error: Error?) -> Void
 
-    init() {
+    public init() {
         self.searchField = IASearchFields.all
     }
     
-    //r
     public func searchFetch(_ completion:@escaping SearchResponse) {
         self.request?.cancel()
 

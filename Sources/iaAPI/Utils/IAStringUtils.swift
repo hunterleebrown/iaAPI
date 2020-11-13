@@ -104,7 +104,7 @@ public struct IAStringUtils {
 
 
 extension NSMutableAttributedString {
-    class func IAMutableAttributedTextWithFontFromHTML(_ textWithFont:String, font:UIFont)->NSMutableAttributedString {
+    public class func IAMutableAttributedTextWithFontFromHTML(_ textWithFont:String, font:UIFont)->NSMutableAttributedString {
         
         do {
 //            let attString =  try NSAttributedString(data: textWithFont.utf8Data!, options:[NSFontAttributeName: font, NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
@@ -123,7 +123,7 @@ extension NSMutableAttributedString {
         return NSMutableAttributedString(string: "")
     }
     
-    class func IAMutableAttributedString(_ text:String, font:UIFont)->NSMutableAttributedString {
+    public class func IAMutableAttributedString(_ text:String, font:UIFont)->NSMutableAttributedString {
         
         do {
             let attString = try NSAttributedString(data: text.utf8Data!, options: [
@@ -141,7 +141,7 @@ extension NSMutableAttributedString {
         
     }
     
-    class func IABodyMutableAttributedString(_ html:String, font:UIFont)->NSMutableAttributedString? {
+    public class func IABodyMutableAttributedString(_ html:String, font:UIFont)->NSMutableAttributedString? {
         let italicFontName: String = font.with(.traitItalic).fontName 
         let boldFontName: String = font.with(.traitBold).fontName 
         let boldItalicFontName: String = font.with([.traitItalic, .traitBold]).fontName 
@@ -191,7 +191,7 @@ extension NSMutableAttributedString {
 
 
 extension Data {
-    var attributedString: NSAttributedString? {
+    public var attributedString: NSAttributedString? {
         do {
             //            return try NSAttributedString(data: self, options:[NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
 
@@ -208,22 +208,22 @@ extension Data {
 }
 
 extension String {
-    var utf8Data: Data? {
+    public var utf8Data: Data? {
         return data(using: .utf8)
     }
     
-    func remove(htmlTag tag:String)->String {
+    public func remove(htmlTag tag:String)->String {
         return self.replacingOccurrences(of:"(?i)<\(tag)\\b[^<]*>|</\(tag)\\b[^<]*>", with: "", options:.regularExpression, range: nil)
     }
     
-    func removeAttribute(htmlAttribute attribute:String)->String {
+    public func removeAttribute(htmlAttribute attribute:String)->String {
         return self.replacingOccurrences(of:"(?i)\\s*\(attribute)=\\S*[^<']*'|\"*", with: "", options:.regularExpression, range: nil)
     }
 }
 
 extension UIFont {
 
-    func with(_ traits: UIFontDescriptor.SymbolicTraits...) -> UIFont {
+    public func with(_ traits: UIFontDescriptor.SymbolicTraits...) -> UIFont {
         guard let descriptor = self.fontDescriptor.withSymbolicTraits(UIFontDescriptor.SymbolicTraits(traits).union(self.fontDescriptor.symbolicTraits)) else {
             return self
         }

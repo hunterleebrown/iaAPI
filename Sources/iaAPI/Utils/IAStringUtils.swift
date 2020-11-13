@@ -1,9 +1,8 @@
 //
-//  StringUtils.swift
-//  IA Music
+//  IAStringUtils.swift
+//  iaAPI
 //
-//  Created by Hunter on 11/29/15.
-//  Copyright © 2015 Hunter Lee Brown. All rights reserved.
+//  Created by Hunter Lee Brown
 //
 
 import Foundation

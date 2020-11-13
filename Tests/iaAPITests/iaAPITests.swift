@@ -23,8 +23,7 @@ final class iaAPITests: XCTestCase {
 
         let searchTitle = "Hunter Lee Brown - Piano Works"
 
-        service.queryString = "\"\(searchTitle)\""
-        service.searchFetch { (contents, error) in
+        let req = service.searchFetch(queryString: "\"\(searchTitle)\"") { (contents, error) in
 
             if let contentItems = contents {
                 print("contentItems: \(contentItems)")
@@ -41,10 +40,14 @@ final class iaAPITests: XCTestCase {
             }
         }
 
+
+
         waitForExpectations(timeout: testTimeout) { (error) in
             if let error = error {
                 XCTFail("error: \(error)")
             }
+            print("request: \(String(describing: req))")
+
         }
     }
 

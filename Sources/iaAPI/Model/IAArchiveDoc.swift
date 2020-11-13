@@ -1,9 +1,8 @@
 //
-//  IAMetaDocMappable.swift
-//  IA-Music
+//  IAArchiveDoc.swift
+//  iaAPI
 //
-//  Created by Hunter Lee Brown on 2/11/17.
-//  Copyright © 2017 Hunter Lee Brown. All rights reserved.
+//  Created by Hunter Lee Brown Lee Brown
 //
 
 import Foundation
@@ -51,11 +50,10 @@ public class IADocMetadata: Decodable {
 
 }
 
-public class IAArchiveDocDecodable: Decodable {
+public class IAArchiveDoc: Decodable {
 
     public var metadata: IADocMetadata
-//    var reviews: [[String:String]]
-    public var files: [IAFileMappable]?
+    public var files: [IAFile]?
 
     enum CodingKeys: String, CodingKey {
         case metadata
@@ -66,9 +64,8 @@ public class IAArchiveDocDecodable: Decodable {
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         self.metadata = try values.decode(IADocMetadata.self, forKey: .metadata)
-        self.files = try values.decodeIfPresent([IAFileMappable].self, forKey: .files)
+        self.files = try values.decodeIfPresent([IAFile].self, forKey: .files)
     }
-
 
     public var identifier: String? {
         get {
@@ -112,11 +109,11 @@ public class IAArchiveDocDecodable: Decodable {
         }
     }
     
-    public var sortedFiles: [IAFileMappable]? {
+    public var sortedFiles: [IAFile]? {
         guard let audFiles = files else { return nil}
         
         let audioFiles = audFiles.filter({ (f) -> Bool in
-            f.format == IAFileMappableFormat.mp3
+            f.format == IAFileFormat.mp3
         })
         
         return audioFiles.sorted(by: { (one, two) -> Bool in
@@ -157,98 +154,11 @@ public class IAArchiveDocDecodable: Decodable {
         return URL(string:"http://archive.org/download/\(identifier!)/\(name)")
     }
     
-    public func fileUrl(file:IAFileMappable) ->URL {
+    public func fileUrl(file:IAFile) ->URL {
         let urlString = "http://archive.org/download/\(identifier!)/\(file.name!)"
         return URL(string: urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!)!
     }
     
 }
 
-public enum IAFileMappableFormat: String, Decodable {
-    case mp3 = "VBR MP3"
-    case jpg   = "JPEG"
-    case other
-}
 
-
-public class IAFileMappable: Decodable {
-
-    public var name : String?
-    public var title : String?
-    public var track : String?
-    public var size : String?
-    public var format: IAFileMappableFormat? {
-        get {
-            if let raw = self.rawFormat {
-                return IAFileMappableFormat(rawValue: raw)
-            }
-
-            return nil
-        }
-    }
-    public var rawFormat: String?
-    public var length: String?
-    
-
-    enum CodingKeys: String, CodingKey {
-        case name
-        case title
-        case track
-        case size
-        case format
-        case length
-      }
-
-    public required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        self.name = try values.decodeIfPresent(String.self, forKey: .name)
-        self.title = try values.decodeIfPresent(String.self, forKey: .title)
-        self.track = try values.decodeIfPresent(String.self, forKey: .track)
-        self.size = try values.decodeIfPresent(String.self, forKey: .size)
-        self.rawFormat = try values.decodeIfPresent(String.self, forKey: .format)
-        self.length = try values.decodeIfPresent(String.self, forKey: .length)
-
-    }
-
-    public var cleanedTrack: Int?{
-        
-        if let tr = track {
-            if let num = Int(tr) {
-                return num
-            } else {
-                let sp = tr.components(separatedBy: "/")
-                if let first = sp.first {
-                    let trimmed = first.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    return Int(trimmed) ?? nil
-                }
-            }
-        }
-        return nil
-    }
-    
-    public var calculatedSize: String? {
-    
-        if let s = size {
-            if let rawSize = Int(s) {
-                return IAStringUtils.sizeString(size: rawSize)
-            }
-        }
-        return nil
-    }
-    
-    
-    public var displayLength: String? {
-        
-        if let l = length {
-            return IAStringUtils.timeFormatter(timeString: l)
-        }
-        return nil
-    }
-    
-    public var displayName: String {
-        return self.title ?? self.name!
-    }
-
-
-    
-}

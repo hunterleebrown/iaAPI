@@ -1,15 +1,15 @@
 //
 //  IAMapperDoc.swift
-//  IA-Music
+//  iaAPI
 //
-//  Created by Hunter Lee Brown on 2/10/17.
-//  Copyright © 2017 Hunter Lee Brown. All rights reserved.
+//  Created by Hunter Lee Brown Lee Brown
 //
+
 
 import Foundation
 
 public class IAResponse: Decodable {
-    public var docs: [IASearchDocDecodable] = [IASearchDocDecodable]()
+    public var docs: [IASearchDoc] = [IASearchDoc]()
 
     enum CodingKeys: String, CodingKey {
         case docs
@@ -17,7 +17,7 @@ public class IAResponse: Decodable {
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        self.docs = try values.decodeIfPresent([IASearchDocDecodable].self, forKey: .docs)!
+        self.docs = try values.decodeIfPresent([IASearchDoc].self, forKey: .docs)!
     }
 }
 
@@ -38,7 +38,7 @@ public class IASearchResults: Decodable {
 }
 
 
-public class IASearchDocDecodable: Decodable {
+public class IASearchDoc: Decodable {
     
     public var identifier: String?
     public var title: String?

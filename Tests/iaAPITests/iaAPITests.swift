@@ -23,7 +23,7 @@ final class iaAPITests: XCTestCase {
 
         let searchTitle = "Hunter Lee Brown - Piano Works"
 
-        let req = service.searchFetch(queryString: "\"\(searchTitle)\"") { (contents, error) in
+        let req = service.searchMp3(queryString: "\"\(searchTitle)\"") { (contents, error) in
 
             if let contentItems = contents {
                 print("contentItems: \(contentItems)")

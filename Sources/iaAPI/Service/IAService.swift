@@ -33,8 +33,9 @@ public class IAService {
     private func buildQueryParameters(input: String,
                                       searchField: IASearchField,
                                       mediaTypes:[IAMediaType],
-                                      format:IAFileFormat,
-                                      rows:Int)-> Dictionary<String, String>? {
+                                      rows:Int,
+                                      format:IAFileFormat?
+                                      )-> Dictionary<String, String>? {
 
         guard input.count > 0 else {
             return nil
@@ -63,8 +64,12 @@ public class IAService {
         }
         let queryMediaTypes = qmediaTypes.joined(separator: " OR ")
 
+        var query:String = "\(queryString)\(queryExclusions) AND (\(queryMediaTypes))"
+        if let f = format {
+            query.append(" AND format:\"\(f.rawValue)\" ")
+        }
         parameters = [
-            "q" : "\(queryString)\(queryExclusions) AND format:\"\(format.rawValue)\" AND (\(queryMediaTypes))",
+            "q" : query,
             "output" : "json",
             "rows" : "\(rows)"
         ];
@@ -79,19 +84,24 @@ public class IAService {
 
     public typealias SearchResponse = (_ result: [IASearchDoc]?, _ error: Error?) -> Void
 
-    @discardableResult public func searchFetch(queryString: String,
+
+    @discardableResult public func searchMp3(queryString: String, completion:@escaping SearchResponse) -> Request? {
+        return self.search(queryString: queryString, format: .mp3, completion: completion)
+    }
+
+    @discardableResult public func search(queryString: String,
                                                searchField: IASearchField = .all,
                                                mediaTypes:[IAMediaType] = [.audio, .etree],
-                                               format:IAFileFormat = .mp3,
                                                rows: Int = 50,
+                                               format: IAFileFormat?,
                                                completion:@escaping SearchResponse) -> Request? {
         self.request?.cancel()
 
         guard let parameters = buildQueryParameters(input: queryString,
                                                     searchField: searchField,
                                                     mediaTypes: mediaTypes,
-                                                    format: format,
-                                                    rows: rows) else {
+                                                    rows: rows,
+                                                    format: format) else {
             completion([IASearchDoc](), nil)
             return nil
         }

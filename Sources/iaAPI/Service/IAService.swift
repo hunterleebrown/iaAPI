@@ -18,6 +18,8 @@ public enum IASearchField : Int {
 
 public class IAService {
 
+    public init() { }
+
     public var notIncluding: [String] = ["podcasts_mirror", "web", "webwidecrawl", "samples_only"]
 
     let urlStr: String = "https://archive.org/advancedsearch.php"

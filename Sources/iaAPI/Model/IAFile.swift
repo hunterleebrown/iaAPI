@@ -14,7 +14,7 @@ public enum IAFileFormat: String, Decodable {
     case h264 = "h.264"
     case h264HD = "h.264 HD"
     case mpeg2 = "MPEG2"
-    case mpg4612kb = "512Kb MPEG4"
+    case mpg512kb = "512Kb MPEG4"
     case png = "PNG"
     case mp4HiRes = "HiRes MPEG4"
     case other

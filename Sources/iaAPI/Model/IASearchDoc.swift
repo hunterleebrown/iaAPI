@@ -117,7 +117,7 @@ public class IASearchDoc: Decodable {
     }
     
     public var iconUrl: URL {
-        let itemImageUrl = "http://archive.org/services/img/\(identifier!)"
+        let itemImageUrl = "https://archive.org/services/img/\(identifier!)"
         return URL(string: itemImageUrl)!
     }
     

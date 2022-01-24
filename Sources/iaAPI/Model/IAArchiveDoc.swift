@@ -123,7 +123,7 @@ public class IAArchiveDoc: Decodable {
     }
     
     public func iconUrl()->URL {
-        let itemImageUrl = "http://archive.org/services/img/\(identifier!)"
+        let itemImageUrl = "https://archive.org/services/img/\(identifier!)"
         return URL(string: itemImageUrl)!
     }
     
@@ -151,11 +151,11 @@ public class IAArchiveDoc: Decodable {
             let name = firstJpeg.name
             else { return nil}
         
-        return URL(string:"http://archive.org/download/\(identifier!)/\(name)")
+        return URL(string:"https://archive.org/download/\(identifier!)/\(name)")
     }
     
     public func fileUrl(file:IAFile) ->URL {
-        let urlString = "http://archive.org/download/\(identifier!)/\(file.name!)"
+        let urlString = "https://archive.org/download/\(identifier!)/\(file.name!)"
         return URL(string: urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!)!
     }
     

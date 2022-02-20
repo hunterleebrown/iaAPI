@@ -65,7 +65,14 @@ public class IAFile: Decodable {
         self.size = try values.decodeIfPresent(String.self, forKey: .size)
         self.rawFormat = try values.decodeIfPresent(String.self, forKey: .format)
         self.length = try values.decodeIfPresent(String.self, forKey: .length)
+    }
 
+    public init(name: String?, title: String?, track: String?, size:String?, rawFormat:String?) {
+        self.name = name
+        self.title = title
+        self.track = track
+        self.size = size
+        self.rawFormat = rawFormat
     }
 
     public var cleanedTrack: Int?{

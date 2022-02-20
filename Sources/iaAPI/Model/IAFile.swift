@@ -29,8 +29,8 @@ public enum IAMediaType: String {
 }
 
 
-public class IAFile: Decodable {
-
+public class IAFile: Decodable, Identifiable {
+    public let id = UUID()
     public var name : String?
     public var title : String?
     public var track : String?
@@ -68,6 +68,7 @@ public class IAFile: Decodable {
     }
 
     public init(name: String?, title: String?, track: String?, size:String?, rawFormat:String?) {
+        self.id = UUID()
         self.name = name
         self.title = title
         self.track = track

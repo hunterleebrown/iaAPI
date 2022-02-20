@@ -67,6 +67,11 @@ public class IAArchiveDoc: Decodable {
         self.files = try values.decodeIfPresent([IAFile].self, forKey: .files)
     }
 
+    public init(metadata: IADocMetadata, files:[IAFile]?) {
+        self.metadata = metadata
+        self.files = files
+    }
+
     public var identifier: String? {
         get {
             return metadata.identifier

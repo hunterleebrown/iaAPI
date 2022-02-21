@@ -30,11 +30,12 @@ public enum IAMediaType: String {
 
 
 public class IAFile: Decodable, Identifiable {
-    public let id = UUID()
-    public var name : String?
-    public var title : String?
-    public var track : String?
-    public var size : String?
+
+    public var id: UUID = UUID()
+    public var name: String?
+    public var title: String?
+    public var track: String?
+    public var size: String?
     public var format: IAFileFormat? {
         get {
             if let raw = self.rawFormat {

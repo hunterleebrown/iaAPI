@@ -76,6 +76,41 @@ final class iaAPITests: XCTestCase {
 
     }
 
+    func test78Collection() {
+
+        let ex = expectation(description: "Expecting search data not nil")
+
+        let ident = "78_lets-have-another-cup-o-coffee_glenn-miller-and-his-orchestra-irving-berlin-mario_gbia0015317a"
+        let docTitle = "Let's Have Another Cup O' Coffee"
+
+        service.archiveDoc(identifier: ident, completion: { (inDoc, error) in
+            if let doc = inDoc {
+                print("the doc: \(doc)")
+            }
+            if let title = inDoc?.title {
+                XCTAssert(title == docTitle)
+            }
+
+            if let collection = inDoc?.metadata.collection {
+                print("collection: \(collection)");
+                XCTAssert(collection.contains("78rpm"))
+            }
+
+            if let publisher = inDoc?.metadata.publisher {
+                print("publisher: \(publisher)")
+                XCTAssert(publisher == "Bluebird")
+            }
+
+            ex.fulfill()
+        })
+
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+    }
+
     static var allTests = [
         ("testExample", testExample),
     ]

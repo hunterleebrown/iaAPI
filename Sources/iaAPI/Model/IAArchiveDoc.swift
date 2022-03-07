@@ -16,6 +16,8 @@ public class IADocMetadata: Decodable {
     public var uploader: String?
     public var title: String?
     public var artist: String?
+    public var collection: [String] = [String]()
+    public var publisher: String?
 
     enum CodingKeys: String, CodingKey {
         case identifier
@@ -25,6 +27,8 @@ public class IADocMetadata: Decodable {
         case uploader
         case title
         case artist
+        case collection
+        case publisher
     }
 
     public required init(from decoder: Decoder) throws {
@@ -46,6 +50,14 @@ public class IADocMetadata: Decodable {
 
         self.title = try values.decodeIfPresent(String.self, forKey: .title)
         self.artist = try values.decodeIfPresent(String.self, forKey: .artist)
+
+        if let singleCollection = try? values.decodeIfPresent(String.self, forKey: .collection) {
+            self.collection.append(singleCollection)
+        } else if let multipleCollection = try? values.decode([String].self, forKey: .collection) {
+            self.collection = multipleCollection
+        }
+
+        self.publisher = try values.decodeIfPresent(String.self, forKey: .publisher)
     }
 
 }

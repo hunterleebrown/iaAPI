@@ -3,27 +3,13 @@ import XCTest
 
 final class iaAPITests: XCTestCase {
 
-    let service = IAService()
-    var testTimeout: TimeInterval = 20
-
-    override class func setUp() {
-        super.setUp()
-    }
-
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(iaAPI().text, "Hello, World!")
-    }
+    var testTimeout: TimeInterval = 100
 
     func testSearch() {
-
+        let service = IAService(.online)
         let ex = expectation(description: "Expecting search data not nil")
-
         let searchTitle = "Hunter Lee Brown - Piano Works"
-
-        let req = service.searchMp3(queryString: "\(searchTitle)") { (contents, error) in
+        let req = service.searchMp3(queryString: searchTitle) { (contents, error) in
             if let contentItems = contents {
                 var found = false
                 contentItems.enumerated().forEach { (index, doc) in
@@ -31,14 +17,10 @@ final class iaAPITests: XCTestCase {
                         found = true
                     }
                 }
-
                 XCTAssert(found)
-
                 ex.fulfill()
             }
         }
-
-
 
         waitForExpectations(timeout: testTimeout) { (error) in
             if let error = error {
@@ -50,6 +32,7 @@ final class iaAPITests: XCTestCase {
     }
 
     func testDetails() {
+        let service = IAService(.online)
 
         let ex = expectation(description: "Expecting search data not nil")
 
@@ -75,6 +58,8 @@ final class iaAPITests: XCTestCase {
     }
 
     func test78Collection() {
+
+        let service = IAService(.online)
 
         let ex = expectation(description: "Expecting search data not nil")
 
@@ -111,9 +96,12 @@ final class iaAPITests: XCTestCase {
 
     
     func testMockSearch() {
+        
+        let service = IAService(.offline)
+        
         let ex = expectation(description: "Expecting search data not nil")
 
-        service.mockSearch { result, error in
+        service.searchMp3(queryString: "Nothing") { result, error in
             if let docs = result {
                 if docs.count > 0 {
                     docs.forEach { doc in
@@ -133,9 +121,12 @@ final class iaAPITests: XCTestCase {
     }
     
     func testMockArchiveDoc() {
+        
+        let service = IAService(.offline)
+
         let ex = expectation(description: "Expecting search data not nil")
 
-        service.mockArchiveDoc { doc, error in
+        service.archiveDoc(identifier: "Nothing") { doc, error in
             if let aDoc = doc {
                 print("\(aDoc.identifier!) \(aDoc.title!)")
                 ex.fulfill()
@@ -149,8 +140,4 @@ final class iaAPITests: XCTestCase {
         }
         
     }
-    
-    static var allTests = [
-        ("testExample", testExample),
-    ]
 }

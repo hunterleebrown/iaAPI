@@ -23,10 +23,8 @@ final class iaAPITests: XCTestCase {
 
         let searchTitle = "Hunter Lee Brown - Piano Works"
 
-        let req = service.searchMp3(queryString: "\"\(searchTitle)\"") { (contents, error) in
-
+        let req = service.searchMp3(queryString: "\(searchTitle)") { (contents, error) in
             if let contentItems = contents {
-                print("contentItems: \(contentItems)")
                 var found = false
                 contentItems.enumerated().forEach { (index, doc) in
                     if doc.title == searchTitle {
@@ -111,6 +109,47 @@ final class iaAPITests: XCTestCase {
         }
     }
 
+    
+    func testMockSearch() {
+        let ex = expectation(description: "Expecting search data not nil")
+
+        service.mockSearch { result, error in
+            if let docs = result {
+                if docs.count > 0 {
+                    docs.forEach { doc in
+                        print("\(doc.identifier!) \(doc.title!)")
+                    }
+                    ex.fulfill()
+                }
+            }
+        }
+        
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+        
+    }
+    
+    func testMockArchiveDoc() {
+        let ex = expectation(description: "Expecting search data not nil")
+
+        service.mockArchiveDoc { doc, error in
+            if let aDoc = doc {
+                print("\(aDoc.identifier!) \(aDoc.title!)")
+                ex.fulfill()
+            }
+        }
+        
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+        
+    }
+    
     static var allTests = [
         ("testExample", testExample),
     ]

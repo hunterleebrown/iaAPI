@@ -158,7 +158,7 @@ public class IAService {
         return parameters
     }
 
-    private func mockSearch(completion:@escaping SearchResponse) {
+    fileprivate func mockSearch(completion:@escaping SearchResponse) {
         if let data = IAStatic.searchResult.data(using: .utf8) {
             let decoder = JSONDecoder()
             let jsonData = try! decoder.decode(IASearchResults.self, from: data)
@@ -167,7 +167,7 @@ public class IAService {
         }
     }
     
-    private func mockArchiveDoc(completion:@escaping ArchiveDocResponse) {
+    fileprivate func mockArchiveDoc(completion:@escaping ArchiveDocResponse) {
         if let data = IAStatic.archiveDoc.data(using: .utf8) {
             let decoder = JSONDecoder()
             let jsonData = try! decoder.decode(IAArchiveDoc.self, from: data)

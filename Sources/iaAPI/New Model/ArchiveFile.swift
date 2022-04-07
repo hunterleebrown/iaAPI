@@ -46,4 +46,12 @@ open class ArchiveFile: Codable, Identifiable {
         case format
         case length
       }
+
+    public lazy var url:  URL? = {
+        guard let identifier = identifier, let fileName = name else { return nil }
+        let urlString = "https://archive.org/download/\(identifier)/\(fileName)"
+
+        return URL(string: urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!)
+    }()
+
 }

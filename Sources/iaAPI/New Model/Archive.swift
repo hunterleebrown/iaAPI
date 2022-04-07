@@ -28,13 +28,6 @@ open class ArchiveMetaData: Codable {
         }
     }
 
-    public func fileUrl(file:ArchiveFile) -> URL? {
-        guard let identifier = metadata?.identifier, let fileName = file.name else { return nil }
-        let urlString = "https://archive.org/download/\(identifier)/\(fileName)"
-
-        return URL(string: urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!)
-    }
-
     public lazy var audioFiles: [ArchiveFile] = {
         files.filter { $0.format == .mp3 }
     }()
@@ -80,6 +73,37 @@ open class Archive: Codable {
         case publisher
         case date
         case mediatype
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.identifier = try values.decodeIfPresent(String.self, forKey: .identifier)
+        self.description = try values.decodeIfPresent(String.self, forKey: .description)
+
+        if let singleSubject = try? values.decodeIfPresent(String.self, forKey: .subject) {
+            self.subject.append(singleSubject)
+        } else if let multiSubject = try? values.decode([String].self, forKey: .subject) {
+            self.subject = multiSubject
+         }
+
+        if let singleCreator = try? values.decodeIfPresent(String.self, forKey: .creator) {
+            self.creator.append(singleCreator)
+        } else if let multiCreator = try? values.decode([String].self, forKey: .creator) {
+            self.creator = multiCreator
+        }
+
+        self.title = try values.decodeIfPresent(String.self, forKey: .title)
+        self.artist = try values.decodeIfPresent(String.self, forKey: .artist)
+
+        if let singleCollection = try? values.decodeIfPresent(String.self, forKey: .collection) {
+            self.collection.append(singleCollection)
+        } else if let multipleCollection = try? values.decode([String].self, forKey: .collection) {
+            self.collection = multipleCollection
+        }
+
+        self.publisher = try values.decodeIfPresent(String.self, forKey: .publisher)
+        self.date = try values.decodeIfPresent(String.self, forKey: .date)
+        self.mediatype = try values.decodeIfPresent(ArchiveMediaType.self, forKey: .mediatype)
     }
 
     public var iconUrl: URL {

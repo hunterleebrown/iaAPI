@@ -1,4 +1,5 @@
 import XCTest
+import Combine
 @testable import iaAPI
 
 final class iaAPITests: XCTestCase {
@@ -140,4 +141,51 @@ final class iaAPITests: XCTestCase {
         }
         
     }
+
+    func testGetArchive() {
+
+        let ex = expectation(description: "Expecting archive doc data not nil")
+
+        var cancellables = Set<AnyCancellable>()
+
+        var archive: ArchiveMetaData?
+
+        let service = ArchiveService()
+        let identifier = "78_lets-have-another-cup-o-coffee_glenn-miller-and-his-orchestra-irving-berlin-mario_gbia0015317a"
+
+        service.getArchive(with: identifier)
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    print("ERROR: \(error)")
+                    XCTFail()
+                case .finished:
+                    print("Finished getting archive data")
+                }
+                ex.fulfill()
+
+            } receiveValue: { (arc: ArchiveMetaData) in
+                guard let title = arc.metadata?.title, let mediaType = arc.metadata?.mediatype else {
+                    XCTFail()
+                    return }
+                XCTAssertEqual(title, "Let's Have Another Cup O' Coffee")
+                XCTAssertEqual(mediaType, ArchiveMediaType.audio)
+                arc.files.forEach { file in
+                    XCTAssertNotNil(file.format)
+                    print(arc.fileUrl(file: file), file.identifier)
+                }
+                dump(arc)
+                print(arc.metadata?.iconUrl)
+                dump(arc.audioFiles)
+                dump(arc.non78Audio, name: "non 78: ")
+            }
+            .store(in: &cancellables)
+
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+    }
+
 }

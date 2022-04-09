@@ -24,7 +24,7 @@ public class ArchiveResponse: Decodable {
 }
 
 public class ArchiveSearchResults: Decodable {
-    var response: ArchiveResponse = ArchiveResponse()
+    public var response: ArchiveResponse = ArchiveResponse()
 
     enum CodingKeys: String, CodingKey {
         case response

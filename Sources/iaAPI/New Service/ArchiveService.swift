@@ -10,6 +10,8 @@ import Combine
 
 open class ArchiveService {
 
+    public init() {}
+
     /// Base metadata path. Used for individual item requests
     ///
     /// Initial Value:

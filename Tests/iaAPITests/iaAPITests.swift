@@ -146,7 +146,6 @@ final class iaAPITests: XCTestCase {
 
         let ex = expectation(description: "Expecting archive doc data not nil")
         var cancellables = Set<AnyCancellable>()
-        var archive: ArchiveMetaData?
 
         let service = ArchiveService()
 //        let identifier = "78_lets-have-another-cup-o-coffee_glenn-miller-and-his-orchestra-irving-berlin-mario_gbia0015317a"
@@ -194,7 +193,7 @@ final class iaAPITests: XCTestCase {
 
         var cancellables = Set<AnyCancellable>()
 
-        service.search(for: "Hunter Lee Brown", format: .mp3)
+        service.search(query: "Hunter Lee Brown", format: .mp3)
             .sink { completion in
                 switch completion {
                 case .failure(let error):
@@ -216,6 +215,79 @@ final class iaAPITests: XCTestCase {
                 }
             }
             .store(in: &cancellables)
+
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+    }
+
+    func testAwaitArchiveSearch() {
+        let ex = expectation(description: "Expecting search results")
+        let service = ArchiveService()
+
+        Task {
+            do {
+                let results = try await service.searchAsync(query: "Hunter Lee Brown", format: .mp3)
+                results.response.docs.forEach { meta in
+                    if let identifier = meta.identifier {
+                        print("identifier: \(identifier)")
+                        XCTAssertTrue(!identifier.isEmpty)
+                    }
+                }
+                ex.fulfill()
+            } catch {
+                print(error)
+            }
+        }
+
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+    }
+
+    func testArchiveMetadataAsync() {
+        let ex = expectation(description: "Expecting search results")
+        let service = ArchiveService()
+
+        Task {
+            do {
+                let archive = try await service.getArchiveAsync(with: "hunterleebrown-lovesongs")
+                if let title = archive.metadata?.title {
+                    print("archive title: \(title)")
+                    XCTAssertEqual(title, "Hunter Lee Brown - Love Songs")
+                    ex.fulfill()
+                }
+            } catch {
+                print(error)
+                ex.fulfill()
+            }
+        }
+
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+    }
+
+    func testBadArchiveMetadataAsync() {
+        let ex = expectation(description: "Expecting search results")
+        let service = ArchiveService()
+
+        Task {
+            do {
+                try await service.getArchiveAsync(with: "hunterledsdsadebrown-lovesongs")
+            } catch let error as ArchiveServiceError {
+                XCTAssertTrue(error == .nodata)
+                XCTAssertEqual(error.description, "there is no data")
+                print(error)
+                ex.fulfill()
+            }
+        }
 
         waitForExpectations(timeout: testTimeout) { (error) in
             if let error = error {

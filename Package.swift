@@ -14,19 +14,13 @@ let package = Package(
             name: "iaAPI",
             targets: ["iaAPI"]),
     ],
-    dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.4.0")
-    ],
+    dependencies: [],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
-        .target(
-            name: "iaAPI",
-            dependencies: ["Alamofire"]),
+        .target( name: "iaAPI"),
         .testTarget(
             name: "iaAPITests",
-            dependencies: ["iaAPI"]),
+            dependencies: ["iaAPI"])
     ]
 )

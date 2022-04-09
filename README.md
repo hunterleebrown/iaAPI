@@ -7,16 +7,14 @@ Document Updated November 13, 2020
 ## Usage
 Use as a Swift Package
 
-**import iaAPI**
-import iAPI
+### Import
+    import iAPI
 
-**initialize**
-let service = ArchiveService()
+### Initialize
+    let service = ArchiveService()
 
-**search**
-
-    service.getArchive(with identifier: String) -> Future<Archive, Error> 
-    
+### Search
+#### Using Future (Combine)
     service.search(
         query queryString: String,
         searchField: ArchiveSearchField = .all,
@@ -26,8 +24,7 @@ let service = ArchiveService()
         format: ArchiveFileFormat?
     ) ->Future<ArchiveSearchResults, Error>
     
-    service.getArchiveAsync(with identifier: String) async throws -> Archive
-    
+#### Using async await (iOS 15+)
     service searchAsync(query queryString: String,
         searchField: ArchiveSearchField = .all,
         mediaTypes: [ArchiveMediaType] = [.audio, .etree],
@@ -36,6 +33,14 @@ let service = ArchiveService()
         format: ArchiveFileFormat?
     ) async throws -> ArchiveSearchResults
 
+### Single Item
+#### Using Future (Combine)
+    service.getArchive(with identifier: String) -> Future<Archive, Error> 
+
+#### Using async await (iOS 15 +)
+    service.getArchiveAsync(with identifier: String) async throws -> Archive
+
+### Custom Errors
     public enum ArchiveServiceError: Error {
         case badIdentifier
         case unexpectedHttpResponseCode

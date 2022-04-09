@@ -8,7 +8,7 @@ Internet Archive API for Swift
 Use as a Swift Package
 
 ### Import
-    import iAPI
+    import iaAPI
 
 ### Initialize
     let service = ArchiveService()

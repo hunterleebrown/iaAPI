@@ -114,7 +114,7 @@ final class iaAPITests: XCTestCase {
         }
     }
 
-    func testAwaiArchiveMetadata() {
+    func testAwaitArchiveMetadata() {
         let ex = expectation(description: "Expecting search results")
         let service = ArchiveService()
 

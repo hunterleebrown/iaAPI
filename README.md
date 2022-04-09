@@ -1,8 +1,8 @@
 # iaAPI
 
 Internet Archive API for Swift
-by Hunter Lee Brown
-Document Updated April 8, 2022
+- by Hunter Lee Brown
+- Document Updated April 8, 2022
 
 ## Usage
 Use as a Swift Package

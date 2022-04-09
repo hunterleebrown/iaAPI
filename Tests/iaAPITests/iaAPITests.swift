@@ -145,9 +145,7 @@ final class iaAPITests: XCTestCase {
     func testGetArchive() {
 
         let ex = expectation(description: "Expecting archive doc data not nil")
-
         var cancellables = Set<AnyCancellable>()
-
         var archive: ArchiveMetaData?
 
         let service = ArchiveService()
@@ -165,7 +163,7 @@ final class iaAPITests: XCTestCase {
                 }
                 ex.fulfill()
 
-            } receiveValue: { (arc: ArchiveMetaData) in
+            } receiveValue: { (arc: Archive) in
                 guard let title = arc.metadata?.title, let mediaType = arc.metadata?.mediatype else {
                     XCTFail()
                     return }
@@ -179,6 +177,43 @@ final class iaAPITests: XCTestCase {
                 print(arc.metadata?.iconUrl)
                 dump(arc.audioFiles, name: "audio")
                 dump(arc.non78Audio, name: "non 78: ")
+            }
+            .store(in: &cancellables)
+
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+    }
+
+    func testArchiveSearch() {
+        let ex = expectation(description: "Expecting search results")
+
+        let service: ArchiveService = ArchiveService()
+
+        var cancellables = Set<AnyCancellable>()
+
+        service.search(for: "Hunter Lee Brown", format: .mp3)
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    print("ERROR: \(error)")
+                    XCTFail()
+                case .finished:
+                    print("Finished getting archive search")
+                }
+                ex.fulfill()
+
+            } receiveValue: { (results: ArchiveSearchResults) in
+                XCTAssertTrue(results.response.numFound > 0)
+                results.response.docs.forEach { meta in
+                    if let title = meta.title, let identifier = meta.identifier {
+                        XCTAssertTrue(!title.isEmpty)
+                        XCTAssertTrue(!identifier.isEmpty)
+                        print("\(identifier): \(title)")
+                    }
+                }
             }
             .store(in: &cancellables)
 

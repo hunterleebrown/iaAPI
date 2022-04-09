@@ -8,8 +8,8 @@
 import Foundation
 
 
-open class ArchiveMetaData: Codable {
-    public var metadata: Archive?
+open class Archive: Codable {
+    public var metadata: ArchiveMetaData?
     public var files: [ArchiveFile] = []
 
     enum CodingKeys: String, CodingKey {
@@ -19,7 +19,7 @@ open class ArchiveMetaData: Codable {
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        self.metadata = try values.decode(Archive.self, forKey: .metadata)
+        self.metadata = try values.decode(ArchiveMetaData.self, forKey: .metadata)
         self.files = try values.decode([ArchiveFile].self, forKey: .files)
         self.files.forEach { file in
             if let identifier = self.metadata?.identifier {
@@ -45,9 +45,16 @@ public enum ArchiveMediaType: String, Codable {
     case image = "image"
     case movies = "movies"
     case texts = "texts"
+    case other
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let string = try container.decode(String.self)
+        self = ArchiveMediaType(rawValue: string) ?? .other
+    }
 }
 
-open class Archive: Codable {
+open class ArchiveMetaData: Codable {
     
     public var identifier: String?
     public var description: String?

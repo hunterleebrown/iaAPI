@@ -58,11 +58,11 @@ extension ArchiveServiceError: CustomStringConvertible {
         case .unknown:
             return "Unknown error"
         case .emptyQueryString:
-            return "Query string is empty"
+            return "Query string is empty."
         case .nodata:
-            return "There were no results"
+            return "No items were found."
         case .badParameters:
-            return "The query parameters post body is incorrect"
+            return "The query parameters post body is incorrect."
         }
     }
 }

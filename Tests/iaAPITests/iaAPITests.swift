@@ -13,8 +13,8 @@ final class iaAPITests: XCTestCase {
         var cancellables = Set<AnyCancellable>()
 
         let service = ArchiveService()
-        let identifier = "78_lets-have-another-cup-o-coffee_glenn-miller-and-his-orchestra-irving-berlin-mario_gbia0015317a"
-//        let identifier = "hunterleebrown-lovesongs"
+//        let identifier = "78_lets-have-another-cup-o-coffee_glenn-miller-and-his-orchestra-irving-berlin-mario_gbia0015317a"
+        let identifier = "hunterleebrown-lovesongs"
 
         service.getArchive(with: identifier)
             .sink { completion in
@@ -31,8 +31,8 @@ final class iaAPITests: XCTestCase {
                 guard let title = arc.metadata?.archiveTitle, let mediaType = arc.metadata?.mediatype else {
                     XCTFail()
                     return }
-                XCTAssertEqual(title, "Let's Have Another Cup O' Coffee")
-//                XCTAssertEqual(title, "Hunter Lee Brown - Love Songs")
+//                XCTAssertEqual(title, "Let's Have Another Cup O' Coffee")
+                XCTAssertEqual(title, "Hunter Lee Brown - Love Songs")
                 XCTAssertEqual(mediaType, ArchiveMediaType.audio)
                 arc.files.forEach { file in
                     XCTAssertNotNil(file.format)

@@ -41,10 +41,13 @@ public struct Archive: Codable {
     }
 
     public var non78Audio: [ArchiveFile] {
-        guard let metadata = metadata, metadata.collection.contains("78rpm") else { return [] }
-        return files.filter { $0.format == .mp3  && !($0.name?.contains("78_"))! }
+        guard let meta = metadata else { return [] }
+        var returnedFiles = files.filter{ $0.format == .mp3 }
+        if meta.collection.contains("78rpm") {
+            returnedFiles = returnedFiles.filter{ !$0.name!.contains("78_")}
+        }
+        return returnedFiles
     }
-
 }
 
 public enum ArchiveMediaType: String, Codable {

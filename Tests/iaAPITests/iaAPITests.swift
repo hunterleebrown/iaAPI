@@ -13,8 +13,8 @@ final class iaAPITests: XCTestCase {
         var cancellables = Set<AnyCancellable>()
 
         let service = ArchiveService()
-//        let identifier = "78_lets-have-another-cup-o-coffee_glenn-miller-and-his-orchestra-irving-berlin-mario_gbia0015317a"
-        let identifier = "hunterleebrown-lovesongs"
+        let identifier = "78_lets-have-another-cup-o-coffee_glenn-miller-and-his-orchestra-irving-berlin-mario_gbia0015317a"
+//        let identifier = "hunterleebrown-lovesongs"
 
         service.getArchive(with: identifier)
             .sink { completion in
@@ -28,17 +28,20 @@ final class iaAPITests: XCTestCase {
                 ex.fulfill()
 
             } receiveValue: { (arc: Archive) in
-                guard let title = arc.metadata?.title, let mediaType = arc.metadata?.mediatype else {
+                guard let title = arc.metadata?.archiveTitle, let mediaType = arc.metadata?.mediatype else {
                     XCTFail()
                     return }
-                XCTAssertEqual(title, "Hunter Lee Brown - Love Songs")
+                XCTAssertEqual(title, "Let's Have Another Cup O' Coffee")
+//                XCTAssertEqual(title, "Hunter Lee Brown - Love Songs")
                 XCTAssertEqual(mediaType, ArchiveMediaType.audio)
                 arc.files.forEach { file in
                     XCTAssertNotNil(file.format)
-                    print(file.url, file.identifier)
+                    if let url = file.url, let identifier = file.identifier {
+                        print(url.description, identifier)
+                    }
                 }
                 dump(arc)
-                print(arc.metadata?.iconUrl)
+                print(arc.metadata?.iconUrl.description ?? "")
                 dump(arc.audioFiles, name: "audio")
                 dump(arc.non78Audio, name: "non 78: ")
             }
@@ -72,10 +75,10 @@ final class iaAPITests: XCTestCase {
             } receiveValue: { (results: ArchiveSearchResults) in
                 XCTAssertTrue(results.response.numFound > 0)
                 results.response.docs.forEach { meta in
-                    if let title = meta.title, let identifier = meta.identifier {
+                    if let title = meta.archiveTitle {
                         XCTAssertTrue(!title.isEmpty)
-                        XCTAssertTrue(!identifier.isEmpty)
-                        print("\(identifier): \(title)")
+                        XCTAssertTrue(!meta.identifier!.isEmpty)
+                        print("\(meta.identifier!): \(title)")
                     }
                 }
             }
@@ -96,10 +99,8 @@ final class iaAPITests: XCTestCase {
             do {
                 let results = try await service.searchAsync(query: "Hunter Lee Brown", format: .mp3)
                 results.response.docs.forEach { meta in
-                    if let identifier = meta.identifier {
-                        print("identifier: \(identifier)")
-                        XCTAssertTrue(!identifier.isEmpty)
-                    }
+                    print("identifier: \(meta.identifier!)")
+                    XCTAssertTrue(!meta.identifier!.isEmpty)
                 }
                 ex.fulfill()
             } catch {
@@ -121,7 +122,7 @@ final class iaAPITests: XCTestCase {
         Task {
             do {
                 let archive = try await service.getArchiveAsync(with: "hunterleebrown-lovesongs")
-                if let title = archive.metadata?.title {
+                if let title = archive.metadata?.archiveTitle {
                     print("archive title: \(title)")
                     XCTAssertEqual(title, "Hunter Lee Brown - Love Songs")
                     ex.fulfill()
@@ -145,7 +146,7 @@ final class iaAPITests: XCTestCase {
 
         Task {
             do {
-                try await service.getArchiveAsync(with: "hunterledsdsadebrown-lovesongs")
+                _ = try await service.getArchiveAsync(with: "hunterledsdsadebrown-lovesongs")
             } catch let error as ArchiveServiceError {
                 XCTAssertTrue(error == .nodata)
                 XCTAssertEqual(error.description, "there is no data")

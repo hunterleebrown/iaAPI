@@ -27,16 +27,18 @@ public enum ArchiveFileFormat: String, Codable {
     }
 }
 
-open class ArchiveFile: Codable, Identifiable {
-    public var id: UUID = UUID()
+public struct ArchiveFile: Codable, ArchiveBaseMetaData {
+    public var identifier: String?
+    public var artist: String?
+    public var creator: [String]?
+    public var archiveTitle: String?
+
     public var name: String?
     public var title: String?
     public var track: String?
     public var size: String?
     public var format: ArchiveFileFormat?
     public var length: String?
-
-    public internal(set) var identifier: String?
 
     enum CodingKeys: String, CodingKey {
         case name
@@ -45,9 +47,9 @@ open class ArchiveFile: Codable, Identifiable {
         case size
         case format
         case length
-      }
+    }
 
-    public lazy var url:  URL? = {
+    public var url: URL?  {
         guard let identifier = identifier, let fileName = name else { return nil }
         let urlString = "https://archive.org/download/\(identifier)/\(fileName)"
 
@@ -56,6 +58,6 @@ open class ArchiveFile: Codable, Identifiable {
         }
 
         return nil
-    }()
+    }
 
 }

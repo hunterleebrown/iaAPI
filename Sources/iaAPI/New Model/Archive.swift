@@ -8,7 +8,7 @@
 import Foundation
 
 
-open class Archive: Codable {
+public struct Archive: Codable {
     public var metadata: ArchiveMetaData?
     public var files: [ArchiveFile] = []
 
@@ -17,25 +17,33 @@ open class Archive: Codable {
         case files
     }
 
-    public required init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         self.metadata = try values.decode(ArchiveMetaData.self, forKey: .metadata)
-        self.files = try values.decode([ArchiveFile].self, forKey: .files)
-        self.files.forEach { file in
-            if let identifier = self.metadata?.identifier {
-                file.identifier = identifier
-            }
+        let getfiles: [ArchiveFile]  = try values.decode([ArchiveFile].self, forKey: .files)
+        getfiles.forEach { file in
+            let newFile = ArchiveFile(identifier: self.metadata?.identifier,
+                                      artist: self.metadata?.artist,
+                                      creator: self.metadata?.creator,
+                                      archiveTitle: self.metadata?.archiveTitle,
+                                      name: file.name,
+                                      title: file.title,
+                                      track: file.track,
+                                      size: file.size,
+                                      format: file.format,
+                                      length: file.length)
+            files.append(newFile)
         }
     }
 
-    public lazy var audioFiles: [ArchiveFile] = {
+    public var audioFiles: [ArchiveFile] {
         files.filter { $0.format == .mp3 }
-    }()
+    }
 
-    public lazy var non78Audio: [ArchiveFile] = {
+    public var non78Audio: [ArchiveFile] {
         guard let metadata = metadata, metadata.collection.contains("78rpm") else { return [] }
         return files.filter { $0.format == .mp3  && !($0.name?.contains("78_"))! }
-    }()
+    }
 
 }
 
@@ -54,27 +62,45 @@ public enum ArchiveMediaType: String, Codable {
     }
 }
 
-open class ArchiveMetaData: Codable {
-    
+public protocol ArchiveBaseMetaData: Hashable {
+    var identifier: String? {get set}
+    var archiveTitle: String? {get set}
+    var artist: String? {get set}
+    var creator: [String]? {get set}
+}
+
+public protocol ArchiveMetaDataProtocol {
+    var description: String? {get set}
+    var subject: [String] {get set}
+    var uploader: String? {get set}
+    var collection: [String] {get set}
+    var publisher: String? {get set}
+    var date: String? {get set}
+    var mediatype: ArchiveMediaType {get set}
+}
+
+
+public struct ArchiveMetaData: Codable, ArchiveMetaDataProtocol, ArchiveBaseMetaData {
+
     public var identifier: String?
     public var description: String?
     public var subject: [String] = []
-    public var creator: [String] = []
     public var uploader: String?
-    public var title: String?
+    public var creator: [String]? = []
+    public var archiveTitle: String?
     public var artist: String?
-    public var collection: [String] = []
     public var publisher: String?
     public var date: String?
-    public var mediatype: ArchiveMediaType?
+    public var mediatype: ArchiveMediaType
+    public var collection: [String] = []
 
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: String, CodingKey {
         case identifier
         case description
         case subject
         case creator
         case uploader
-        case title
+        case archiveTitle = "title"
         case artist
         case collection
         case publisher
@@ -82,9 +108,9 @@ open class ArchiveMetaData: Codable {
         case mediatype
     }
 
-    public required init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        self.identifier = try values.decodeIfPresent(String.self, forKey: .identifier)
+        self.identifier = try values.decode(String.self, forKey: .identifier)
         self.description = try values.decodeIfPresent(String.self, forKey: .description)
 
         if let singleSubject = try? values.decodeIfPresent(String.self, forKey: .subject) {
@@ -94,12 +120,12 @@ open class ArchiveMetaData: Codable {
          }
 
         if let singleCreator = try? values.decodeIfPresent(String.self, forKey: .creator) {
-            self.creator.append(singleCreator)
+            self.creator = [singleCreator]
         } else if let multiCreator = try? values.decode([String].self, forKey: .creator) {
             self.creator = multiCreator
         }
 
-        self.title = try values.decodeIfPresent(String.self, forKey: .title)
+        self.archiveTitle = try values.decodeIfPresent(String.self, forKey: .archiveTitle)
         self.artist = try values.decodeIfPresent(String.self, forKey: .artist)
 
         if let singleCollection = try? values.decodeIfPresent(String.self, forKey: .collection) {
@@ -110,7 +136,7 @@ open class ArchiveMetaData: Codable {
 
         self.publisher = try values.decodeIfPresent(String.self, forKey: .publisher)
         self.date = try values.decodeIfPresent(String.self, forKey: .date)
-        self.mediatype = try values.decodeIfPresent(ArchiveMediaType.self, forKey: .mediatype)
+        self.mediatype = try values.decode(ArchiveMediaType.self, forKey: .mediatype)
     }
 
     public var iconUrl: URL {

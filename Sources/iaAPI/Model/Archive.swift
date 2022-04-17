@@ -8,7 +8,8 @@
 import Foundation
 
 
-public struct Archive: Codable {
+public struct Archive: Identifiable, Codable {
+    public var id: String = UUID().uuidString
     public var metadata: ArchiveMetaData?
     public var files: [ArchiveFile] = []
 
@@ -84,7 +85,6 @@ public protocol ArchiveMetaDataProtocol {
 
 
 public struct ArchiveMetaData: Codable, ArchiveMetaDataProtocol, ArchiveBaseMetaData {
-
     public var identifier: String?
     public var description: String?
     public var subject: [String] = []

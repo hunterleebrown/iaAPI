@@ -6,7 +6,46 @@ final class iaAPITests: XCTestCase {
 
     var testTimeout: TimeInterval = 100
 
+    func testGetArchiveMock() {
+        var cancellables = Set<AnyCancellable>()
+        let ex = expectation(description: "Expecting archive doc data not nil")
+        var identifier = "HunterLeeBrownPianoWorks2010-2011"
+        
+        let service = ArchiveService(.mock)
+        service.getArchive(with: "whatever")
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    print("Error: \(error)")
+                    XCTFail()
+                case .finished:
+                    print("Finished getting mock Archived")
+                }
+                ex.fulfill()
+            } receiveValue: { arc in
+                
+                guard let title = arc.metadata?.archiveTitle,
+                        let mediaType = arc.metadata?.mediatype,
+                        let identifier = arc.metadata?.identifier else {
+                    XCTFail()
+                    return }
+                
+                print(title)
+                print(identifier)
+                
+                XCTAssertEqual(identifier, "HunterLeeBrownPianoWorks2010-2011")
+                
+            }.store(in: &cancellables)
 
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+        
+    }
+    
+    
     func testGetArchive() {
 
         let ex = expectation(description: "Expecting archive doc data not nil")

@@ -8,9 +8,18 @@
 import Foundation
 import Combine
 
-open class ArchiveService {
+public enum ArchiveServiceType {
+    case mock, live
+}
 
-    public init() {}
+
+open class ArchiveService {
+    
+    let serviceType: ArchiveServiceType
+
+    public init(_ serviceType: ArchiveServiceType = .live) {
+        self.serviceType = serviceType
+    }
 
     /// Base metadata path. Used for individual item requests
     ///

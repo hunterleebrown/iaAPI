@@ -25,15 +25,14 @@ final class iaAPITests: XCTestCase {
             } receiveValue: { arc in
                 
                 guard let title = arc.metadata?.archiveTitle,
-                        let mediaType = arc.metadata?.mediatype,
-                        let identifier = arc.metadata?.identifier else {
+                        let mockIdentitifer = arc.metadata?.identifier else {
                     XCTFail()
                     return }
                 
                 print(title)
                 print(identifier)
                 
-                XCTAssertEqual(identifier, "HunterLeeBrownPianoWorks2010-2011")
+                XCTAssertEqual(mockIdentitifer, identifier)
                 
             }.store(in: &cancellables)
 
@@ -179,6 +178,35 @@ final class iaAPITests: XCTestCase {
         }
     }
 
+    func testMockAwaitArchiveMetadata() {
+        let ex = expectation(description: "Expecting search results")
+        let service = ArchiveService(.mock)
+
+        let mockIdentifier = "HunterLeeBrownPianoWorks2010-2011"
+        let mockTitle = "Hunter Lee Brown - Piano Works"
+        
+        Task {
+            do {
+                let archive = try await service.getArchiveAsync(with: mockIdentifier)
+                if let title = archive.metadata?.archiveTitle {
+                    print("archive title: \(title)")
+                    XCTAssertEqual(title, mockTitle)
+                    ex.fulfill()
+                }
+            } catch {
+                print(error)
+                ex.fulfill()
+            }
+        }
+
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+    }
+
+    
     func testAwaitBadArchiveMetadata() {
         let ex = expectation(description: "Expecting search results")
         let service = ArchiveService()

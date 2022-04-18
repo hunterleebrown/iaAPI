@@ -8,6 +8,8 @@
 import Foundation
 import Combine
 
+/// For using mock json or live from URL
+/// - .live is default
 public enum ArchiveServiceType {
     case mock, live
 }
@@ -17,6 +19,11 @@ open class ArchiveService {
     
     let serviceType: ArchiveServiceType
 
+    /// Initer
+    ///
+    /// Params:
+    /// - serviceType: ArchiveServiceType
+    ///
     public init(_ serviceType: ArchiveServiceType = .live) {
         self.serviceType = serviceType
     }

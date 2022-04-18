@@ -153,6 +153,32 @@ final class iaAPITests: XCTestCase {
         }
     }
 
+    func testMockAwaitArchiveSearch() {
+        let ex = expectation(description: "Expecting search results")
+        let service = ArchiveService(.mock)
+
+        Task {
+            do {
+                let results = try await service.searchAsync(query: "Hunter Lee Brown", format: .mp3)
+                results.response.docs.forEach { meta in
+                    print("identifier: \(meta.identifier!)")
+                    XCTAssertTrue(!meta.identifier!.isEmpty)
+                }
+                ex.fulfill()
+            } catch {
+                print(error)
+            }
+        }
+
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+    }
+
+    
+    
     func testAwaitArchiveMetadata() {
         let ex = expectation(description: "Expecting search results")
         let service = ArchiveService()

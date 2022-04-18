@@ -9,7 +9,7 @@ final class iaAPITests: XCTestCase {
     func testGetArchiveMock() {
         var cancellables = Set<AnyCancellable>()
         let ex = expectation(description: "Expecting archive doc data not nil")
-        var identifier = "HunterLeeBrownPianoWorks2010-2011"
+        let identifier = "HunterLeeBrownPianoWorks2010-2011"
         
         let service = ArchiveService(.mock)
         service.getArchive(with: "whatever")

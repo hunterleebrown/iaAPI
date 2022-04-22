@@ -8,9 +8,25 @@
 import Foundation
 import Combine
 
-open class ArchiveService {
+/// For using mock json or live from URL
+/// - .live is default
+public enum ArchiveServiceType {
+    case mock, live
+}
 
-    public init() {}
+
+open class ArchiveService {
+    
+    let serviceType: ArchiveServiceType
+
+    /// Initer
+    ///
+    /// Params:
+    /// - serviceType: ArchiveServiceType
+    ///
+    public init(_ serviceType: ArchiveServiceType = .live) {
+        self.serviceType = serviceType
+    }
 
     /// Base metadata path. Used for individual item requests
     ///

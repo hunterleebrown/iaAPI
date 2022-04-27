@@ -40,6 +40,12 @@ public protocol ArchiveFileProtocol: ArchiveBaseMetaData {
     var size: String? {get set}
     var format: ArchiveFileFormat? {get set}
     var length: String? {get set}
+
+    var url: URL? { get }
+    var displayLength: String? { get }
+    var calculatedSize: String? { get }
+    var iconUrl: URL { get }
+    var displayTitle: String { get }
 }
 
 public struct ArchiveFile: Identifiable, Codable, ArchiveFileProtocol {
@@ -75,6 +81,33 @@ public struct ArchiveFile: Identifiable, Codable, ArchiveFileProtocol {
         }
 
         return nil
+    }
+
+    public var displayLength: String? {
+
+        if let l = length {
+            return IAStringUtils.timeFormatter(timeString: l)
+        }
+        return nil
+    }
+
+    public var calculatedSize: String? {
+
+        if let s = size {
+            if let rawSize = Int(s) {
+                return IAStringUtils.sizeString(size: rawSize)
+            }
+        }
+        return nil
+    }
+
+    public var iconUrl: URL {
+        let itemImageUrl = "https://archive.org/services/img/\(identifier!)"
+        return URL(string: itemImageUrl)!
+    }
+
+    public var displayTitle: String {
+        return title ?? name ?? ""
     }
 
 }

@@ -83,7 +83,7 @@ public protocol ArchiveMetaDataProtocol {
     var subject: [String] {get set}
     var uploader: String? {get set}
     var collection: [String] {get set}
-    var publisher: String? {get set}
+    var publisher: [String]? {get set}
     var date: String? {get set}
     var mediatype: ArchiveMediaType {get set}
 }
@@ -97,7 +97,7 @@ public struct ArchiveMetaData: Codable, ArchiveMetaDataProtocol, ArchiveBaseMeta
     public var creator: [String]? = []
     public var archiveTitle: String?
     public var artist: String?
-    public var publisher: String?
+    public var publisher: [String]? = []
     public var date: String?
     public var mediatype: ArchiveMediaType
     public var collection: [String] = []
@@ -143,7 +143,13 @@ public struct ArchiveMetaData: Codable, ArchiveMetaDataProtocol, ArchiveBaseMeta
         }
 
         self.uploader = try values.decodeIfPresent(String.self, forKey: .uploader)
-        self.publisher = try values.decodeIfPresent(String.self, forKey: .publisher)
+
+        if let singlePublisher = try? values.decodeIfPresent(String.self, forKey: .publisher) {
+            self.publisher = [singlePublisher]
+        } else if let multiPublisher = try? values.decode([String].self, forKey: .publisher) {
+            self.publisher = multiPublisher
+        }
+
         self.date = try values.decodeIfPresent(String.self, forKey: .date)
         self.mediatype = try values.decode(ArchiveMediaType.self, forKey: .mediatype)
     }

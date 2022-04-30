@@ -98,7 +98,7 @@ extension ArchiveService {
 
         switch searchField {
         case .all:
-            queryString = input
+            queryString = "( \(buildQueryString(input: input)) )"
         case .creator:
             queryString = "creator:\(input)"
         }
@@ -117,9 +117,23 @@ extension ArchiveService {
 
         var query:String = "\(queryString)\(queryExclusions) AND (\(queryMediaTypes))"
         if let f = format {
-            query.append(" AND format:\"\(f.rawValue)\" ")
+            query.append(" AND format:\"\(f.rawValue)\"")
         }
 
-        return "q=\(query)&output=json&rows=\(rows)&page=\(page)"
+        return "q=\(query)&output=json&rows=\(rows)"
     }
+
+    private func buildQueryString(input: String) -> String {
+
+        //( (title:E^100 OR salients:E^50 OR subject:E^25 OR description:E^15 OR collection:E^10 OR language:E^10 OR text:E^1) (title:power^100 OR salients:power^50 OR subject:power^25 OR description:power^15 OR collection:power^10 OR language:power^10 OR text:power^1) (title:biggs^100 OR salients:biggs^50 OR subject:biggs^25 OR description:biggs^15 OR collection:biggs^10 OR language:biggs^10 OR text:biggs^1) )
+
+        var queryString = ""
+        let terms = input.split(separator: " ")
+        terms.forEach { term in
+            queryString += "(title:\(term)^100 OR salients:\(term)^50 OR subject:\(term)^25 OR description:\(term)^15) "
+        }
+
+        return queryString
+    }
+
 }

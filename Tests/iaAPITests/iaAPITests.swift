@@ -135,7 +135,7 @@ final class iaAPITests: XCTestCase {
 
         Task {
             do {
-                let results = try await service.searchAsync(query: "Hunter Lee Brown", format: .mp3)
+                let results = try await service.searchAsync(query: "E Power Biggs", rows: 100, format: .mp3)
                 results.response.docs.forEach { meta in
                     print("identifier: \(meta.identifier!)")
                     XCTAssertTrue(!meta.identifier!.isEmpty)
@@ -143,6 +143,8 @@ final class iaAPITests: XCTestCase {
                 ex.fulfill()
             } catch {
                 print(error)
+                XCTFail()
+                ex.fulfill()
             }
         }
 
@@ -191,6 +193,7 @@ final class iaAPITests: XCTestCase {
                     XCTAssertEqual(title, "Hunter Lee Brown - Love Songs")
                     ex.fulfill()
                 }
+                print("Uploader: \(archive.metadata?.uploader ?? "")")
             } catch {
                 print(error)
                 ex.fulfill()
@@ -269,7 +272,6 @@ final class iaAPITests: XCTestCase {
             do {
                 _ = try await service.getArchiveAsync(with: "hunterledsdsadebrown-lovesongs")
             } catch let error as ArchiveServiceError {
-                XCTAssertTrue(error == .nodata)
                 XCTAssertEqual(error.description, "there is no data")
                 print(error)
                 ex.fulfill()

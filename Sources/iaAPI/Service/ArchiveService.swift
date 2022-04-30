@@ -62,6 +62,7 @@ public enum ArchiveServiceError: Error {
     case nodata
     case emptyQueryString
     case badParameters
+    case decodingError(errorMessage: String)
 }
 
 extension ArchiveServiceError: CustomStringConvertible {
@@ -79,6 +80,8 @@ extension ArchiveServiceError: CustomStringConvertible {
             return "No items were found."
         case .badParameters:
             return "The query parameters post body is incorrect."
+        case .decodingError(let message):
+            return "Decoding error: \(message)"
         }
     }
 }

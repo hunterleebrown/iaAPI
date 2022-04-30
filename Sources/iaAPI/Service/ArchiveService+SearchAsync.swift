@@ -42,8 +42,14 @@ extension ArchiveService {
             archiveData = IAStatic.searchResult.data(using: .utf8)!
         }
 
-        guard let data = archiveData, let results = try? JSONDecoder().decode(ArchiveSearchResults.self, from: data)
-        else { throw ArchiveServiceError.nodata }
+        guard let data = archiveData else { throw ArchiveServiceError.nodata }
+
+        var results: ArchiveSearchResults = ArchiveSearchResults()
+        do {
+            results = try JSONDecoder().decode(ArchiveSearchResults.self, from: data)
+        } catch let error as Error {
+            throw ArchiveServiceError.decodingError(errorMessage: "\(error)")
+        }
 
         return results
     }

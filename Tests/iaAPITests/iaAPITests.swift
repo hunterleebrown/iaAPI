@@ -232,6 +232,36 @@ final class iaAPITests: XCTestCase {
         }
     }
 
+    func testHugeAwaitArchiveMetadata() {
+        let ex = expectation(description: "Expecting search results")
+        let service = ArchiveService()
+
+        Task {
+            do {
+                let archive = try await service.getArchiveAsync(with: "tntvillage_484164")
+                if let title = archive.metadata?.archiveTitle {
+                    print("archive title: \(title)")
+                    XCTAssertEqual(title, "Glenn Miller - Discografia (1935-2006)")
+                    ex.fulfill()
+                }
+                XCTAssert(archive.files.count == 200)
+                XCTAssert(archive.isLargeArchive)
+                archive.files.forEach { file in
+                    print("\(file.name)")
+                }
+            } catch {
+                print(error)
+                ex.fulfill()
+            }
+        }
+
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+    }
+
     
     func testAwaitBadArchiveMetadata() {
         let ex = expectation(description: "Expecting search results")

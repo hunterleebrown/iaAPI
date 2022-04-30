@@ -12,6 +12,7 @@ public struct Archive: Identifiable, Codable {
     public var id: String = UUID().uuidString
     public var metadata: ArchiveMetaData?
     public var files: [ArchiveFile] = []
+    public var isLargeArchive: Bool = false
 
     enum CodingKeys: String, CodingKey {
         case metadata
@@ -22,18 +23,13 @@ public struct Archive: Identifiable, Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         self.metadata = try values.decode(ArchiveMetaData.self, forKey: .metadata)
         let getfiles: [ArchiveFile]  = try values.decode([ArchiveFile].self, forKey: .files)
-        getfiles.forEach { file in
-            let newFile = ArchiveFile(identifier: self.metadata?.identifier,
-                                      artist: self.metadata?.artist,
-                                      creator: self.metadata?.creator,
-                                      archiveTitle: self.metadata?.archiveTitle,
-                                      name: file.name,
-                                      title: file.title,
-                                      track: file.track,
-                                      size: file.size,
-                                      format: file.format,
-                                      length: file.length)
-            files.append(newFile)
+
+        if getfiles.count > 200 {
+            self.isLargeArchive = true
+            let reducedFiles: [ArchiveFile] = Array(getfiles[0...199])
+            self.appendMetaToFiles(archiveFiles: reducedFiles, fileFiles: &files)
+        } else {
+            self.appendMetaToFiles(archiveFiles: getfiles, fileFiles: &files)
         }
     }
 
@@ -49,6 +45,23 @@ public struct Archive: Identifiable, Codable {
         }
         return returnedFiles
     }
+
+    private func appendMetaToFiles(archiveFiles: [ArchiveFile], fileFiles: inout [ArchiveFile]){
+        archiveFiles.forEach { file in
+            let newFile = ArchiveFile(identifier: self.metadata?.identifier,
+                                      artist: self.metadata?.artist,
+                                      creator: self.metadata?.creator,
+                                      archiveTitle: self.metadata?.archiveTitle,
+                                      name: file.name,
+                                      title: file.title,
+                                      track: file.track,
+                                      size: file.size,
+                                      format: file.format,
+                                      length: file.length)
+            fileFiles.append(newFile)
+        }
+    }
+
 }
 
 public enum ArchiveMediaType: String, Codable {

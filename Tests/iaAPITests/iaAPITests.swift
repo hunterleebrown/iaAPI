@@ -244,10 +244,8 @@ final class iaAPITests: XCTestCase {
                     XCTAssertEqual(title, "Glenn Miller - Discografia (1935-2006)")
                     ex.fulfill()
                 }
-                XCTAssert(archive.files.count == 200)
-                XCTAssert(archive.isLargeArchive)
-                archive.files.forEach { file in
-                    print("\(file.name)")
+                for(index, file) in archive.non78Audio.enumerated(){
+                    print("\(index). \(file.name)")
                 }
             } catch {
                 print(error)

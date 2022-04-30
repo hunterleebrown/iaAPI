@@ -12,7 +12,6 @@ public struct Archive: Identifiable, Codable {
     public var id: String = UUID().uuidString
     public var metadata: ArchiveMetaData?
     public var files: [ArchiveFile] = []
-    public var isLargeArchive: Bool = false
 
     enum CodingKeys: String, CodingKey {
         case metadata

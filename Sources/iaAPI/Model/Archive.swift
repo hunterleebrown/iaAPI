@@ -79,7 +79,7 @@ public protocol ArchiveBaseMetaData: Hashable {
 }
 
 public protocol ArchiveMetaDataProtocol {
-    var description: String? {get set}
+    var description: [String] {get set}
     var subject: [String] {get set}
     var uploader: String? {get set}
     var collection: [String] {get set}
@@ -91,7 +91,7 @@ public protocol ArchiveMetaDataProtocol {
 
 public struct ArchiveMetaData: Codable, ArchiveMetaDataProtocol, ArchiveBaseMetaData {
     public var identifier: String?
-    public var description: String?
+    public var description: [String] = []
     public var subject: [String] = []
     public var uploader: String?
     public var creator: [String]? = []
@@ -119,13 +119,18 @@ public struct ArchiveMetaData: Codable, ArchiveMetaDataProtocol, ArchiveBaseMeta
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         self.identifier = try values.decode(String.self, forKey: .identifier)
-        self.description = try values.decodeIfPresent(String.self, forKey: .description)
+
+        if let singleDescription = try? values.decodeIfPresent(String.self, forKey: .description) {
+            self.description.append(singleDescription)
+        } else if let multiDescription = try? values.decode([String].self, forKey: .description) {
+            self.description = multiDescription
+        }
 
         if let singleSubject = try? values.decodeIfPresent(String.self, forKey: .subject) {
             self.subject.append(singleSubject)
         } else if let multiSubject = try? values.decode([String].self, forKey: .subject) {
             self.subject = multiSubject
-         }
+        }
 
         if let singleCreator = try? values.decodeIfPresent(String.self, forKey: .creator) {
             self.creator = [singleCreator]

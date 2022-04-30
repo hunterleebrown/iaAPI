@@ -142,6 +142,7 @@ public struct ArchiveMetaData: Codable, ArchiveMetaDataProtocol, ArchiveBaseMeta
             self.collection = multipleCollection
         }
 
+        self.uploader = try values.decodeIfPresent(String.self, forKey: .uploader)
         self.publisher = try values.decodeIfPresent(String.self, forKey: .publisher)
         self.date = try values.decodeIfPresent(String.self, forKey: .date)
         self.mediatype = try values.decode(ArchiveMediaType.self, forKey: .mediatype)

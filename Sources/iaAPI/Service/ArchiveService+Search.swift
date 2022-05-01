@@ -98,7 +98,8 @@ extension ArchiveService {
 
         switch searchField {
         case .all:
-            queryString = "( \(buildQueryString(input: input)) )"
+//            queryString = "( \(buildQueryString(input: input)) )"
+            queryString = input
         case .creator:
             queryString = "creator:\(input)"
         }

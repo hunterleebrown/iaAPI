@@ -135,11 +135,12 @@ final class iaAPITests: XCTestCase {
 
         Task {
             do {
-                let results = try await service.searchAsync(query: "Serenade for strings", rows: 100, format: .mp3)
+                let results = try await service.searchAsync(query: "Glenn Miller", rows: 50, page: 3, format: .mp3)
                 results.response.docs.forEach { meta in
-                    print("identifier: \(meta.identifier!)")
+//                    print("identifier: \(meta.identifier!)")
                     XCTAssertTrue(!meta.identifier!.isEmpty)
                 }
+                print("Page results----> \(results.response.start)")
                 ex.fulfill()
             } catch {
                 print(error)

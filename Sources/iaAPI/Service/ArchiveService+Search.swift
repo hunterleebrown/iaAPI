@@ -123,7 +123,7 @@ extension ArchiveService {
             query.append(" AND format:\"\(f.rawValue)\"")
         }
 
-        return "q=\(query)&output=json&rows=\(rows)"
+        return "q=\(query)&output=json&rows=\(rows)&page=\(page)"
     }
 
     private func buildQueryString(input: String) -> String {

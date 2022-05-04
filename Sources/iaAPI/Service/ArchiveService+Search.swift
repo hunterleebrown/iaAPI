@@ -16,10 +16,12 @@ public enum ArchiveSearchField: Int {
 public class ArchiveResponse: Decodable {
     public var docs: [ArchiveMetaData] = [ArchiveMetaData]()
     public var numFound: Int = 0
+    public var start: Int = 0
 
     enum CodingKeys: String, CodingKey {
         case docs
         case numFound
+        case start
     }
 }
 

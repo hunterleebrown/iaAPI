@@ -28,7 +28,6 @@ public enum ArchiveFileFormat: String, Codable {
 }
 
 public protocol ArchiveFileProtocol: ArchiveBaseMetaData {
-    var id: String { get set }
     var identifier: String? {get set}
     var artist: String? {get set}
     var creator: [String]? {get set}
@@ -48,9 +47,8 @@ public protocol ArchiveFileProtocol: ArchiveBaseMetaData {
     var displayTitle: String { get }
 }
 
-public struct ArchiveFile: Identifiable, Codable, ArchiveFileProtocol {
+public struct ArchiveFile: Codable, ArchiveFileProtocol {
 
-    public var id: String = UUID().uuidString
     public var identifier: String?
     public var artist: String?
     public var creator: [String]?

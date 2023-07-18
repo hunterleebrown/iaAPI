@@ -286,4 +286,61 @@ final class iaAPITests: XCTestCase {
         }
     }
 
+    func testMovieSearch() {
+        let ex = expectation(description: "Expecting search results")
+        let service = ArchiveService()
+
+        Task {
+            do {
+                let results = try await service.searchAsync(query: "Hunter Brown", mediaTypes: [.movies], format: .h264HD)
+                results.response.docs.forEach { meta in
+                    print("identifier: \(meta.identifier!)")
+                    XCTAssertTrue(!meta.identifier!.isEmpty)
+                }
+                ex.fulfill()
+            } catch {
+                print(error)
+            }
+        }
+
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+    }
+
+
+    func testMovieArchive() {
+        let ex = expectation(description: "Expecting search results")
+        let service = ArchiveService()
+
+        Task {
+            do {
+                let archive = try await service.getArchiveAsync(with: "hunter45")
+                if let title = archive.metadata?.archiveTitle {
+                    print("archive title: \(title)")
+//                    XCTAssertEqual(title, "Glenn Miller - Discografia (1935-2006)")
+                    ex.fulfill()
+                }
+                for(index, file) in archive.files.enumerated(){
+                    print("\(index). \(file.name)")
+                }
+
+                let hdVideos = archive.files.filter { $0.format == .h264HD}
+
+                dump(hdVideos)
+
+            } catch {
+                print(error)
+                ex.fulfill()
+            }
+        }
+
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+    }
 }

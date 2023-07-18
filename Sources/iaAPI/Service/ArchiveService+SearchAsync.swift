@@ -10,11 +10,12 @@ import Foundation
 extension ArchiveService {
 
     public func searchAsync(query queryString: String,
-        searchField: ArchiveSearchField = .all,
-        mediaTypes: [ArchiveMediaType] = [.audio, .etree],
-        rows: Int = 50,
-        page: Int = 1,
-        format: ArchiveFileFormat?
+                            searchField: ArchiveSearchField = .all,
+                            mediaTypes: [ArchiveMediaType] = [.audio, .etree],
+                            rows: Int = 50,
+                            page: Int = 1,
+                            format: ArchiveFileFormat?,
+                            collection: String? = nil
     ) async throws -> ArchiveSearchResults {
 
         guard let parameters = self.buildQueryParameters(input: queryString,
@@ -22,7 +23,8 @@ extension ArchiveService {
                                                          mediaTypes: mediaTypes,
                                                          rows: rows,
                                                          page: page,
-                                                         format: format) else {
+                                                         format: format,
+                                                         collection: collection) else {
             throw ArchiveServiceError.badParameters
         }
 

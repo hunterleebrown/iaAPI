@@ -85,12 +85,12 @@ extension ArchiveService {
 
 
     internal func buildQueryParameters(input: String,
-                                      searchField: ArchiveSearchField,
-                                      mediaTypes:[ArchiveMediaType],
-                                      rows:Int,
-                                      page: Int,
-                                      format:ArchiveFileFormat?
-    )-> String? {
+                                       searchField: ArchiveSearchField,
+                                       mediaTypes: [ArchiveMediaType],
+                                       rows: Int,
+                                       page: Int,
+                                       format: ArchiveFileFormat?,
+                                       collection: String? = nil)-> String? {
 
         guard input.count > 0 else {
             return nil
@@ -119,8 +119,13 @@ extension ArchiveService {
         let queryMediaTypes = qmediaTypes.joined(separator: " OR ")
 
         var query:String = "\(queryString)\(queryExclusions) AND (\(queryMediaTypes))"
+
         if let f = format {
             query.append(" AND format:\"\(f.rawValue)\"")
+        }
+
+        if let collection = collection {
+            query.append(" AND collection:\(collection)")
         }
 
         return "q=\(query)&output=json&rows=\(rows)&page=\(page)"

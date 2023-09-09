@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ArchiveFileFormat: String, Codable {
+public enum ArchiveFileFormat: String, Codable, CaseIterable {
     case mp3 = "VBR MP3"
     case jpg = "JPEG"
     case oggVideo = "Ogg Video"

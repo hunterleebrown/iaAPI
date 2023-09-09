@@ -29,7 +29,10 @@ extension ArchiveService {
         }
 
         var archiveData: Data?
-        
+
+        print(self.searchUrl)
+        print(parameters)
+
         switch serviceType {
         case .live:
             var urlRequest = URLRequest(url: self.searchUrl)

@@ -242,10 +242,10 @@ final class iaAPITests: XCTestCase {
 
         Task {
             do {
-                let archive = try await service.getArchiveAsync(with: "tntvillage_484164")
+                let archive = try await service.getArchiveAsync(with: "hunterleebrown-lovesongs")
                 if let title = archive.metadata?.archiveTitle {
                     print("archive title: \(title)")
-                    XCTAssertEqual(title, "Glenn Miller - Discografia (1935-2006)")
+                    XCTAssertEqual(title, "Hunter Lee Brown - Love Songs")
                     ex.fulfill()
                 }
                 for(index, file) in archive.non78Audio.enumerated(){

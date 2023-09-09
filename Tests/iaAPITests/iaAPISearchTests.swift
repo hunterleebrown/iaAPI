@@ -103,7 +103,7 @@ final class iaAPISearchTests: XCTestCase {
 
         Task {
             do {
-                let results = try await service.searchAsync(query: "Hunter Brown", mediaTypes: [.movies], format: .h264HD)
+                let results = try await service.searchAsync(query: "San Francisco", mediaTypes: [.movies], format: nil, collection: "prelinger")
                 results.response.docs.forEach { meta in
                     print("identifier: \(meta.identifier!)")
                     XCTAssertTrue(!meta.identifier!.isEmpty)

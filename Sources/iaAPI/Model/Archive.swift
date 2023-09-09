@@ -62,6 +62,7 @@ public enum ArchiveMediaType: String, Codable {
     case image = "image"
     case movies = "movies"
     case texts = "texts"
+    case collection = "collection"
     case other
 
     public init(from decoder: Decoder) throws {

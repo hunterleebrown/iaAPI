@@ -65,6 +65,12 @@ public enum ArchiveServiceError: Error {
     case decodingError(errorMessage: String)
 }
 
+public enum ArchiveTopCollectionType: String {
+    case audio
+    case movies
+    case texts
+}
+
 extension ArchiveServiceError: CustomStringConvertible {
     public var description: String {
         switch self {

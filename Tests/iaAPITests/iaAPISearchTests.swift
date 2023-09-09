@@ -145,4 +145,29 @@ final class iaAPISearchTests: XCTestCase {
         }
     }
 
+    func testTopCollections() {
+
+        let ex = expectation(description: "Expecting search results")
+        let service = ArchiveService()
+
+        Task {
+            do {
+                let results = try await service.getCollections(from: .movies)
+                results.response.docs.forEach { meta in
+                    dump(meta.archiveTitle)
+                    XCTAssertTrue(!meta.identifier!.isEmpty)
+                }
+                ex.fulfill()
+            } catch {
+                print(error)
+            }
+        }
+
+        waitForExpectations(timeout: testTimeout) { (error) in
+            if let error = error {
+                XCTFail("error: \(error)")
+            }
+        }
+    }
+
 }

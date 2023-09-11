@@ -12,6 +12,7 @@ public enum ArchiveFileFormat: String, Codable, CaseIterable {
     case jpg = "JPEG"
     case oggVideo = "Ogg Video"
     case h264 = "h.264"
+    case h264IA = "h.264 IA"
     case h264HD = "h.264 HD"
     case mpeg2 = "MPEG2"
     case mpg512kb = "512Kb MPEG4"

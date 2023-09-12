@@ -41,7 +41,12 @@ public struct Archive: Identifiable, Codable {
     public var preferredAlbumArt: URL? {
         let images = self.files.filter({ $0.isImage }).filter({ $0.source == "original"}).filter({$0.name != "__ia_thumb.jpg"})
 
-        guard !images.isEmpty, let art = images.first?.name, let ident = metadata?.identifier else { return self.metadata?.iconUrl }
+        guard !images.isEmpty,
+              let art = images.first?.name,
+              let ident = metadata?.identifier,
+              let size = images.first?.size,
+              let sizeValue = Int(size),
+              sizeValue < 1000000 else { return self.metadata?.iconUrl }
 
         return URL(string: "https://archive.org/download")?.appendingPathComponent(ident).appendingPathComponent(art)
     }

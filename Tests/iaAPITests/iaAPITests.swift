@@ -180,8 +180,6 @@ final class iaAPITests: XCTestCase {
         }
     }
 
-    
-    
     func testAwaitArchiveMetadata() {
         let ex = expectation(description: "Expecting search results")
         let service = ArchiveService()
@@ -195,6 +193,7 @@ final class iaAPITests: XCTestCase {
                     ex.fulfill()
                 }
                 print("Uploader: \(archive.metadata?.uploader ?? "")")
+                print("Album art: \(archive.preferredAlbumArt?.absoluteString)")
             } catch {
                 print(error)
                 ex.fulfill()

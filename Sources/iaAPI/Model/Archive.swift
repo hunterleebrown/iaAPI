@@ -38,6 +38,14 @@ public struct Archive: Identifiable, Codable {
         return returnedFiles
     }
 
+    public var preferredAlbumArt: URL? {
+        let images = self.files.filter({ $0.isImage }).filter({ $0.source == "original"}).filter({$0.name != "__ia_thumb.jpg"})
+
+        guard !images.isEmpty, let art = images.first?.name, let ident = metadata?.identifier else { return self.metadata?.iconUrl }
+
+        return URL(string: "https://archive.org/download")?.appendingPathComponent(ident).appendingPathComponent(art)
+    }
+
     private func appendMetaToFiles(archiveFiles: [ArchiveFile], fileFiles: inout [ArchiveFile]){
         archiveFiles.forEach { file in
             let newFile = ArchiveFile(identifier: self.metadata?.identifier,
@@ -49,7 +57,8 @@ public struct Archive: Identifiable, Codable {
                                       track: file.track,
                                       size: file.size,
                                       format: file.format,
-                                      length: file.length)
+                                      length: file.length,
+                                      source: file.source)
             fileFiles.append(newFile)
         }
     }

@@ -40,6 +40,7 @@ public protocol ArchiveFileProtocol: ArchiveBaseMetaData {
     var size: String? {get set}
     var format: ArchiveFileFormat? {get set}
     var length: String? {get set}
+    var source: String {get set}
 
     var url: URL? { get }
     var displayLength: String? { get }
@@ -61,6 +62,7 @@ public struct ArchiveFile: Codable, ArchiveFileProtocol {
     public var size: String?
     public var format: ArchiveFileFormat?
     public var length: String?
+    public var source: String
 
     enum CodingKeys: String, CodingKey {
         case name
@@ -69,6 +71,7 @@ public struct ArchiveFile: Codable, ArchiveFileProtocol {
         case size
         case format
         case length
+        case source
     }
 
     public var url: URL?  {
@@ -107,6 +110,15 @@ public struct ArchiveFile: Codable, ArchiveFileProtocol {
 
     public var displayTitle: String {
         return title ?? name ?? ""
+    }
+
+    public var isImage: Bool {
+        switch format {
+        case .jpg, .png, .tiff:
+            return true
+        default:
+            return false
+        }
     }
 
 }

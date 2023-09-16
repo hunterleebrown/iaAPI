@@ -92,9 +92,10 @@ public struct IAStringUtils {
     public static func sizeString(size:Int)->String {
         let numberFormatter = self.numberFormatter
         numberFormatter.numberStyle = .decimal
-        numberFormatter.roundingMode = .up
-        let calc = size / 1000000
-        return numberFormatter.string(from: NSNumber(value:Int32(calc)))!
+//        numberFormatter.roundingMode = .up
+        numberFormatter.maximumFractionDigits = 2
+        let calc: Double  = Double(size) / Double(1000000)
+        return numberFormatter.string(from: NSNumber(value:Double(calc)))!
     }
 
 }

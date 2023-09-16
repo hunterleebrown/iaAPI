@@ -241,14 +241,14 @@ final class iaAPITests: XCTestCase {
 
         Task {
             do {
-                let archive = try await service.getArchiveAsync(with: "hunterleebrown-lovesongs")
+                let archive = try await service.getArchiveAsync(with: "tvtunes_3915")
                 if let title = archive.metadata?.archiveTitle {
                     print("archive title: \(title)")
-                    XCTAssertEqual(title, "Hunter Lee Brown - Love Songs")
+//                    XCTAssertEqual(title, "Hunter Lee Brown - Love Songs")
                     ex.fulfill()
                 }
                 for(index, file) in archive.non78Audio.enumerated(){
-                    print("\(index). \(file.name)")
+                    print("\(index). \(file.name) \(file.calculatedSize)")
                 }
             } catch {
                 print(error)

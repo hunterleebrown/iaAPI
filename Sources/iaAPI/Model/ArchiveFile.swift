@@ -74,6 +74,32 @@ public struct ArchiveFile: Codable, ArchiveFileProtocol {
         case source
     }
 
+    public init(
+        identifier: String? = nil,
+        artist: String? = nil,
+        creator: [String]? = nil,
+        archiveTitle: String? = nil,
+        name: String? = nil,
+        title: String? = nil,
+        track: String? = nil,
+        size: String? = nil,
+        format: ArchiveFileFormat? = nil,
+        length: String? = nil,
+        source: String
+    ) {
+        self.identifier = identifier
+        self.artist = artist
+        self.creator = creator
+        self.archiveTitle = archiveTitle
+        self.name = name
+        self.title = title
+        self.track = track
+        self.size = size
+        self.format = format
+        self.length = length
+        self.source = source
+    }
+
     public var url: URL?  {
         guard let identifier = identifier, let fileName = name else { return nil }
         let urlString = "https://archive.org/download/\(identifier)/\(fileName)"

@@ -49,7 +49,9 @@ public protocol ArchiveFileProtocol: ArchiveBaseMetaData {
     var displayTitle: String { get }
 }
 
-public struct ArchiveFile: Codable, ArchiveFileProtocol {
+public struct ArchiveFile: Codable, Identifiable, ArchiveFileProtocol {
+
+    public var id = UUID()
 
     public var identifier: String?
     public var artist: String?

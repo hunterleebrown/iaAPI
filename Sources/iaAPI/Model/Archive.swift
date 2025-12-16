@@ -8,7 +8,7 @@
 import Foundation
 
 
-public struct Archive: Identifiable, Codable {
+public struct Archive: Identifiable, Codable, Hashable {
     public var id: String = UUID().uuidString
     public var metadata: ArchiveMetaData?
     public var files: [ArchiveFile] = []
@@ -116,6 +116,7 @@ public struct ArchiveMetaData: Codable, ArchiveMetaDataProtocol, ArchiveBaseMeta
     public var date: String?
     public var mediatype: ArchiveMediaType
     public var collection: [String] = []
+    public var collectionArchives: [Archive] = []
 
     enum CodingKeys: String, CodingKey {
         case identifier

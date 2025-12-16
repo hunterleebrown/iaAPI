@@ -19,6 +19,7 @@ public enum ArchiveFileFormat: String, Codable, CaseIterable {
     case png = "PNG"
     case mp4HiRes = "HiRes MPEG4"
     case tiff = "TIFF"
+    case mpeg4 = "MPEG4"
     case other
 
     public init(from decoder: Decoder) throws {
@@ -49,7 +50,7 @@ public protocol ArchiveFileProtocol: ArchiveBaseMetaData {
     var displayTitle: String { get }
 }
 
-public struct ArchiveFile: Codable, Identifiable, ArchiveFileProtocol {
+public struct ArchiveFile: Codable, Identifiable, ArchiveFileProtocol, Hashable {
 
     public var id = UUID()
 

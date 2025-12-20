@@ -42,6 +42,14 @@ open class ArchiveService {
     /// - https://archive.org/advancedsearch.php
     public var searchUrl: URL = URL(string: "https://archive.org/advancedsearch.php")!
 
+    /// Page Production Service endpoint
+    ///
+    /// Initial Value:
+    /// - https://archive.org/services/search/beta/page_production
+    ///
+    /// Used for generating book page images and previews
+    public var pps: URL = URL(string: "https://archive.org/services/search/beta/page_production")!
+
     /// Default Collections not to be included in searches
     ///
     /// Default values:

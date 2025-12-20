@@ -55,6 +55,9 @@ extension ArchiveService {
                 return
             }
 
+            print(self.searchUrl)
+            print(parameters)
+
             var urlRequest = URLRequest(url: self.searchUrl)
             urlRequest.httpMethod = "POST"
             urlRequest.httpBody = parameters.data(using: String.Encoding.utf8)

@@ -6,7 +6,14 @@
 //
 
 import Foundation
+
+#if canImport(UIKit)
 import UIKit
+public typealias IAFont = UIFont
+#elseif canImport(AppKit)
+import AppKit
+public typealias IAFont = NSFont
+#endif
 
 
 public struct IAStringUtils {
@@ -104,14 +111,14 @@ public struct IAStringUtils {
 
 
 extension NSMutableAttributedString {
-    public class func IAMutableAttributedTextWithFontFromHTML(_ textWithFont:String, font:UIFont)->NSMutableAttributedString {
+    public class func IAMutableAttributedTextWithFontFromHTML(_ textWithFont:String, font:IAFont)->NSMutableAttributedString {
         
         do {
 //            let attString =  try NSAttributedString(data: textWithFont.utf8Data!, options:[NSFontAttributeName: font, NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
 
             let attString = try NSAttributedString(data: textWithFont.utf8Data!, options: [
-                NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.html,
-                NSAttributedString.DocumentReadingOptionKey.characterEncoding: String.Encoding.utf8
+                .documentType : NSAttributedString.DocumentType.html,
+                .characterEncoding: String.Encoding.utf8
                 ], documentAttributes: nil)
 
             return NSMutableAttributedString(attributedString: attString)
@@ -123,12 +130,12 @@ extension NSMutableAttributedString {
         return NSMutableAttributedString(string: "")
     }
     
-    public class func IAMutableAttributedString(_ text:String, font:UIFont)->NSMutableAttributedString {
+    public class func IAMutableAttributedString(_ text:String, font:IAFont)->NSMutableAttributedString {
         
         do {
             let attString = try NSAttributedString(data: text.utf8Data!, options: [
-                NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.html,
-                NSAttributedString.DocumentReadingOptionKey.characterEncoding: String.Encoding.utf8
+                .documentType : NSAttributedString.DocumentType.html,
+                .characterEncoding: String.Encoding.utf8
                 ], documentAttributes: nil)
 
             return NSMutableAttributedString(attributedString: attString)
@@ -141,10 +148,16 @@ extension NSMutableAttributedString {
         
     }
     
-    public class func IABodyMutableAttributedString(_ html:String, font:UIFont)->NSMutableAttributedString? {
+    public class func IABodyMutableAttributedString(_ html:String, font:IAFont)->NSMutableAttributedString? {
+        #if canImport(UIKit)
         let italicFontName: String = font.with(.traitItalic).fontName 
         let boldFontName: String = font.with(.traitBold).fontName 
-        let boldItalicFontName: String = font.with([.traitItalic, .traitBold]).fontName 
+        let boldItalicFontName: String = font.with([.traitItalic, .traitBold]).fontName
+        #elseif canImport(AppKit)
+        let italicFontName: String = font.with(.italic).fontName 
+        let boldFontName: String = font.with(.bold).fontName 
+        let boldItalicFontName: String = font.with([.italic, .bold]).fontName
+        #endif
         let pointSize: String = String(describing: font.pointSize)
         
         var htmlCss: String = "<html><head><style type=\"text/css\">"
@@ -196,8 +209,8 @@ extension Data {
             //            return try NSAttributedString(data: self, options:[NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
 
             return try NSAttributedString(data: self, options: [
-                NSAttributedString.DocumentReadingOptionKey.documentType : NSAttributedString.DocumentType.html,
-                NSAttributedString.DocumentReadingOptionKey.characterEncoding: String.Encoding.utf8
+                .documentType : NSAttributedString.DocumentType.html,
+                .characterEncoding: String.Encoding.utf8
             ], documentAttributes: nil)
 
         } catch let error as NSError {
@@ -221,8 +234,8 @@ extension String {
     }
 }
 
+#if canImport(UIKit)
 extension UIFont {
-
     public func with(_ traits: UIFontDescriptor.SymbolicTraits...) -> UIFont {
         guard let descriptor = self.fontDescriptor.withSymbolicTraits(UIFontDescriptor.SymbolicTraits(traits).union(self.fontDescriptor.symbolicTraits)) else {
             return self
@@ -230,3 +243,11 @@ extension UIFont {
         return UIFont(descriptor: descriptor, size: 0)
     }
 }
+#elseif canImport(AppKit)
+extension NSFont {
+    public func with(_ traits: NSFontDescriptor.SymbolicTraits...) -> NSFont {
+        let descriptor = self.fontDescriptor.withSymbolicTraits(NSFontDescriptor.SymbolicTraits(traits).union(self.fontDescriptor.symbolicTraits))
+        return NSFont(descriptor: descriptor, size: 0) ?? self
+    }
+}
+#endif

@@ -20,6 +20,7 @@ public enum ArchiveFileFormat: String, Codable, CaseIterable {
     case mp4HiRes = "HiRes MPEG4"
     case tiff = "TIFF"
     case mpeg4 = "MPEG4"
+    case singlePageProcessedJP2Zip = "Single Page Processed JP2 ZIP"
     case other
 
     public init(from decoder: Decoder) throws {

@@ -187,13 +187,18 @@ final class iaAPITests: XCTestCase {
         Task {
             do {
                 let archive = try await service.getArchiveAsync(with: "hunterleebrown-lovesongs")
+
+                print("Dir: \(archive.dir ?? "")")
+                print("D1: \(archive.d1 ?? "")")
+                print("D2: \(archive.d2 ?? "")")
+                print("Uploader: \(archive.metadata?.uploader ?? "")")
+                print("Album art: \(archive.preferredAlbumArt?.absoluteString)")
+
                 if let title = archive.metadata?.archiveTitle {
                     print("archive title: \(title)")
                     XCTAssertEqual(title, "Hunter Lee Brown - Love Songs")
                     ex.fulfill()
                 }
-                print("Uploader: \(archive.metadata?.uploader ?? "")")
-                print("Album art: \(archive.preferredAlbumArt?.absoluteString)")
             } catch {
                 print(error)
                 ex.fulfill()

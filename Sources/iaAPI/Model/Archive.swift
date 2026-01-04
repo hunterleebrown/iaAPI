@@ -12,10 +12,16 @@ public struct Archive: Identifiable, Codable, Hashable {
     public var id: String = UUID().uuidString
     public var metadata: ArchiveMetaData?
     public var files: [ArchiveFile] = []
+    public var d1: String?
+    public var d2: String?
+    public var dir: String?
 
     enum CodingKeys: String, CodingKey {
         case metadata
         case files
+        case d1
+        case d2
+        case dir
     }
 
     public init(from decoder: Decoder) throws {
@@ -23,6 +29,9 @@ public struct Archive: Identifiable, Codable, Hashable {
         self.metadata = try values.decode(ArchiveMetaData.self, forKey: .metadata)
         let getfiles: [ArchiveFile]  = try values.decode([ArchiveFile].self, forKey: .files)
         self.appendMetaToFiles(archiveFiles: getfiles, fileFiles: &files)
+        self.d1 = try values.decodeIfPresent(String.self, forKey: .d1)
+        self.d2 = try values.decodeIfPresent(String.self, forKey: .d2)
+        self.dir = try values.decodeIfPresent(String.self, forKey: .dir)
     }
 
     public var audioFiles: [ArchiveFile] {

@@ -176,7 +176,7 @@ final class iaAPISearchTests: XCTestCase {
 
         Task {
             do {
-                let results = try await service.searchPPSAsync(query: "hunterleebrown", rows: 50, page: 1, format: .mp3)
+                let results = try await service.searchPPSAsync(query: "mobydickgreatill00herm", mediaTypes: [.texts], rows: 50, page: 1, format: nil)
                 results.response.docs.forEach { meta in
 //                    print("identifier: \(meta.identifier!)")
                     XCTAssertTrue(!meta.identifier!.isEmpty)

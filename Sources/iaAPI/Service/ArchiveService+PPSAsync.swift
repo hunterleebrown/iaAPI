@@ -284,6 +284,8 @@ extension ArchiveService {
             queryExclusions += " AND NOT collection:\(not)"
         }
 
+        queryExclusions += "AND NOT access-restricted-item:true"
+
         var qmediaTypes: [String] = []
         mediaTypes.forEach { (type) in
             qmediaTypes.append("mediaType:\(type.rawValue)")
